@@ -1,4 +1,7 @@
-﻿using Data.TrainingContext;
+﻿using BusinessLogic.Administration;
+using BusinessLogic.Shared;
+using BusinessLogic.Shared.Interfaces;
+using Data.TrainingContext;
 using Microsoft.EntityFrameworkCore;
 
 namespace Web.Core.Bundels
@@ -21,6 +24,9 @@ namespace Web.Core.Bundels
 
                 opt.UseMySQL(connection);
             });
+
+            builder.Services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
+            builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
