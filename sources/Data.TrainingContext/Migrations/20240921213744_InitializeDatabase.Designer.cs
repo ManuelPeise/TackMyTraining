@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.TrainingContext.Migrations
 {
     [DbContext(typeof(TrainingDbContext))]
-    [Migration("20240921203544_InitializeDatabase")]
+    [Migration("20240921213744_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -70,6 +70,48 @@ namespace Data.TrainingContext.Migrations
                     b.HasIndex("CrendentialsId");
 
                     b.ToTable("AppUser");
+                });
+
+            modelBuilder.Entity("Data.Models.Entities.LogMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ExceptionJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Trigger")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MessageLog");
                 });
 
             modelBuilder.Entity("Data.Models.Entities.UserCredentials", b =>

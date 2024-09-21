@@ -35,6 +35,27 @@ namespace Data.TrainingContext.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "MessageLog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Trigger = table.Column<string>(type: "longtext", nullable: false),
+                    Message = table.Column<string>(type: "longtext", nullable: false),
+                    ExceptionJson = table.Column<string>(type: "longtext", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false),
+                    CreatedAt = table.Column<string>(type: "longtext", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false),
+                    UpdatedAt = table.Column<string>(type: "longtext", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MessageLog", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "AppUser",
                 columns: table => new
                 {
@@ -74,6 +95,9 @@ namespace Data.TrainingContext.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AppUser");
+
+            migrationBuilder.DropTable(
+                name: "MessageLog");
 
             migrationBuilder.DropTable(
                 name: "AppUserCredentials");
