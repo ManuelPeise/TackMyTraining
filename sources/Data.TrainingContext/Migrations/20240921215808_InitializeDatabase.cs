@@ -23,6 +23,7 @@ namespace Data.TrainingContext.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Password = table.Column<string>(type: "longtext", nullable: false),
                     Salt = table.Column<string>(type: "longtext", nullable: false),
+                    FailedLoginAttemts = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<string>(type: "longtext", nullable: false),
                     UpdatedBy = table.Column<string>(type: "longtext", nullable: false),

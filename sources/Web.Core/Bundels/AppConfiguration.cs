@@ -27,6 +27,7 @@ namespace Web.Core.Bundels
 
             builder.Services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
             builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
+            builder.Services.AddScoped<IUserLoginService, UserLoginService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
