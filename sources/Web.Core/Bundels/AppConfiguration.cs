@@ -8,6 +8,8 @@ namespace Web.Core.Bundels
 {
     public static class AppConfiguration
     {
+        private const string CorsPolicy = "cors-policy";
+
         public static void ConfigureServices(WebApplicationBuilder builder)
         {
             builder.Services.AddControllers();
@@ -29,6 +31,16 @@ namespace Web.Core.Bundels
             builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
             builder.Services.AddScoped<IUserLoginService, UserLoginService>();
 
+            builder.Services.AddCors(opt =>
+            {
+                opt.AddPolicy(CorsPolicy, opt =>
+                {
+                    opt.AllowAnyHeader();
+                    opt.AllowAnyMethod();
+                    opt.AllowAnyOrigin();
+                });
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -41,6 +53,8 @@ namespace Web.Core.Bundels
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseCors(CorsPolicy);
 
             app.UseHttpsRedirection();
 

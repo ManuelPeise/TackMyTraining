@@ -1,0 +1,20 @@
+{
+  "CaptionLogin": "Login to your account!",
+  "captionRegistration": "Register your account!",
+  "errorInvalidDateOfBirth": "Please enter your date of birth!",
+  "errorInvalidEmailAddress": "Enter a valid email address!",
+  "errorInvalidFirstName": "Please enter your first name!",
+  "errorInvalidLastName": "Please enter your last name!",
+  "errorInvalidPassword": "Password min length 8 characters!",
+  "errorPasswordsDoesNotMatch": "Password does not match!",
+  "labelCancel": "Cancel",
+  "labelConfirmPassword": "Confirm Password",
+  "labelDateOfBirth": "Date of birth",
+  "labelEmail": "Email",
+  "labelFirstName": "First name",
+  "labelLastName": "Last name",
+  "labelLogin": "Login",
+  "labelPassword": "Password",
+  "labelRegister": "Register",
+  "labelRememberLoginData": "Remember my login data?"
+}

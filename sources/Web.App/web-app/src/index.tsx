@@ -2,16 +2,10 @@ import React from 'react';
 import './app.css';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import App from './App';
-import PageContainer from './Components/Containers/PageContainer';
+import AppRouter from './Lib/Router/AppRouter';
+import './Lib/I18n/i18nInit';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(
-  <React.StrictMode>
-    <PageContainer>
-      <App />
-    </PageContainer>
-  </React.StrictMode>
-);
+root.render(<AppRouter />);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
