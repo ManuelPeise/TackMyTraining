@@ -2,6 +2,10 @@ import { Checkbox, FormControlLabel, ListItem, TextField } from '@mui/material';
 import React from 'react';
 import { TValue } from 'src/customTypes';
 import { DataTypeEnum } from 'src/Lib/Enums/DataTypeEnum';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import moment, { Moment } from 'moment';
 
 interface IProps {
   property: string;
@@ -12,6 +16,7 @@ interface IProps {
   fullWidth?: boolean;
   error: string;
   required: boolean;
+  position?: 'start' | 'end' | 'center';
   updateFunction: (value: TValue) => void;
   validationFunction?: (value: TValue) => boolean;
 }
@@ -26,6 +31,8 @@ const getDataType = (dataType: DataTypeEnum) => {
       return 'number';
     case DataTypeEnum.Boolean:
       return 'boolean';
+    case DataTypeEnum.Date:
+      return null;
   }
 };
 
@@ -106,6 +113,42 @@ const FormCheckBox: React.FC<IProps> = (props) => {
     </ListItem>
   );
 };
+
+const FormDatePicker: React.FC<IProps> = (props) => {
+  const { property, value, disabled, label, position, updateFunction } = props;
+
+  const handleChange = React.useCallback(
+    (newValue: Moment | null) => {
+      updateFunction(newValue);
+    },
+    [updateFunction]
+  );
+
+  return (
+    <ListItem
+      key={property}
+      sx={{
+        display: 'flex',
+        justifyContent: position ?? 'end',
+        justifyItems: 'center',
+        paddingTop: '1.5rem',
+        paddingBottom: '0',
+      }}
+    >
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <DesktopDatePicker
+          label={label}
+          format="DD.MM.YYYY"
+          value={moment(value as string)}
+          disabled={disabled}
+          onChange={handleChange}
+          slotProps={{ textField: { variant: 'standard' } }}
+        />
+      </LocalizationProvider>
+    </ListItem>
+  );
+};
+
 const FormInput: React.FC<IProps> = (props) => {
   const { dataType } = props;
 
@@ -117,7 +160,7 @@ const FormInput: React.FC<IProps> = (props) => {
     case DataTypeEnum.Boolean:
       return <FormCheckBox {...props} />;
     case DataTypeEnum.Date:
-      return null;
+      return <FormDatePicker {...props} />;
     default:
       throw new Error(`${dataType} is not supported`);
   }

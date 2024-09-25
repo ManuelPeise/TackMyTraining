@@ -5,7 +5,6 @@ export const useI18n = () => {
   const { t, i18n } = useTranslation(['common']);
 
   const getResource = (key: string) => {
-    console.log(t(key));
     return t(key);
   };
 

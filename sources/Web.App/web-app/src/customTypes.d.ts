@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 export type CompareFunction<TState> = (originalValue: TState, compareValue: TState) => boolean;
 
 export type CompareFunctionDictionary<TState> = {
@@ -28,4 +30,4 @@ export type Required<T> = {
   [P in keyof T]-?: T[P];
 };
 
-export type TValue = string | number | boolean;
+export type TValue = string | number | boolean | Moment;
