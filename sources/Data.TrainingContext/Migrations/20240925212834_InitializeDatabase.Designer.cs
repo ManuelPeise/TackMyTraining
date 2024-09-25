@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.TrainingContext.Migrations
 {
     [DbContext(typeof(TrainingDbContext))]
-    [Migration("20240921215808_InitializeDatabase")]
+    [Migration("20240925212834_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -131,7 +131,15 @@ namespace Data.TrainingContext.Migrations
                     b.Property<int>("FailedLoginAttemts")
                         .HasColumnType("int");
 
+                    b.Property<string>("JwT")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RefreshToken")
                         .IsRequired()
                         .HasColumnType("longtext");
 

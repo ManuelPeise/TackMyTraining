@@ -3,8 +3,11 @@ using BusinessLogic.Shared.Interfaces;
 using Data.Models.Entities;
 using Data.Models.Export;
 using Data.Models.Import;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Security.Claims;
+
 
 namespace BusinessLogic.Administration
 {
@@ -16,7 +19,7 @@ namespace BusinessLogic.Administration
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<UserExportModel?> Login(UserLogin userLogin)
+        public async Task<UserExportModel?> Login(UserLogin userLogin, IConfiguration config)
         {
             try
             {
@@ -39,6 +42,17 @@ namespace BusinessLogic.Administration
 
                         if (securedPassword == user.Credentials.Password)
                         {
+                            var tokenGenerator = new JwtTokenGenerator();
+
+                            var (jwt, refreshToken) = tokenGenerator
+                            .GenerateToken(config, LoadUserClaims(user), 100);
+
+                            user.Credentials.JwT = jwt;
+                            user.Credentials.RefreshToken = refreshToken;
+
+                            await _unitOfWork.UserRepository.Update(user);
+                            await _unitOfWork.SaveChanges();
+
                             return new UserExportModel
                             {
                                 FirstName = user.FirstName,
@@ -48,6 +62,11 @@ namespace BusinessLogic.Administration
                                 Email = user.Email,
                                 DateOfBirth = user.DateOfBirth,
                                 IsActive = user.IsActive,
+                                JwtData = new JWTData
+                                {
+                                    JwtToken = jwt,
+                                    RefreshToken = refreshToken,
+                                }
                             };
                         }
                         else
@@ -63,7 +82,7 @@ namespace BusinessLogic.Administration
 
                             await _unitOfWork.UserRepository.Update(user);
 
-                            await _unitOfWork.SaveChanges(null);
+                            await _unitOfWork.SaveChanges();
                         }
                     }
                     else
@@ -86,10 +105,22 @@ namespace BusinessLogic.Administration
                     TimeStamp = DateTime.Now
                 });
 
-                await _unitOfWork.SaveChanges(null);
+                await _unitOfWork.SaveChanges();
 
                 return null;
             }
+        }
+
+        private List<Claim> LoadUserClaims(AppUser account)
+        {
+            return new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
+                new Claim(ClaimValueTypes.Email,account.Email),
+                new Claim("UserName", account.UserName),
+                new Claim("FirstName", account.FirstName ?? ""),
+                new Claim("LastName", account.LastName ?? ""),
+            };
         }
 
         private async Task TryLoadCredentials(int crendentialsId)

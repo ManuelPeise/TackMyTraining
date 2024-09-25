@@ -1,5 +1,8 @@
 import React from 'react';
 import { AxiosClient } from 'src/Lib/Api/AxiosClient';
+import { useLocalStorage } from './useLocalStorage';
+import { IJwtData } from 'src/Lib/Interfaces/IUserData';
+import { LocalStorageKeyEnum } from 'src/Lib/LocalStorage';
 
 type ApiCache<T> = {
   [key: string]: T;
@@ -22,10 +25,14 @@ type ApiResult<T> = {
 export const serviceUrls = {
   auth: {
     login: 'LoginService/Login',
+    registration: 'UserRegistration/RegisterUser',
   },
+  test: 'Test/Tester',
 };
 
-export const useApi = <T>(apiOptions: ApiRequestOptions): ApiResult<T> => {
+export const useApi = <T>(apiOptions: ApiRequestOptions, isPublic: boolean = false): ApiResult<T> => {
+  const { item } = useLocalStorage<IJwtData>(LocalStorageKeyEnum.JwtData);
+
   const defaultRequestOptionsRef = React.useRef<ApiRequestOptions>(apiOptions);
   const [cache, setCache] = React.useState<ApiCache<T>>({} as ApiCache<T>);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -40,6 +47,10 @@ export const useApi = <T>(apiOptions: ApiRequestOptions): ApiResult<T> => {
 
         if (!forceRequest && !cache[defaultRequestOptionsRef.current.serviceUrl]) return;
 
+        if (!isPublic) {
+          AxiosClient.defaults.headers.common['Authorization'] = `bearer ${item.jwtToken}`;
+        }
+
         setError(null);
         setIsLoading(true);
 
@@ -48,7 +59,7 @@ export const useApi = <T>(apiOptions: ApiRequestOptions): ApiResult<T> => {
           headers: { 'Content-Type': 'application/json' },
         }).then(async (res) => {
           if (res.status === 200) {
-            cache[defaultRequestOptionsRef.current.serviceUrl] = await JSON.parse(res.data);
+            cache[defaultRequestOptionsRef.current.serviceUrl] = await JSON.parse(JSON.stringify(res.data));
 
             setCache(cache);
           } else {
@@ -63,7 +74,7 @@ export const useApi = <T>(apiOptions: ApiRequestOptions): ApiResult<T> => {
         setIsLoading(false);
       }
     },
-    [cache]
+    [cache, item, isPublic]
   );
 
   const post = React.useCallback(
@@ -73,6 +84,11 @@ export const useApi = <T>(apiOptions: ApiRequestOptions): ApiResult<T> => {
       }
 
       cache[defaultRequestOptionsRef.current.serviceUrl] = {} as T;
+
+      if (!isPublic) {
+        AxiosClient.defaults.headers.common['Authorization'] = `bearer ${item.jwtToken}`;
+      }
+
       setError(null);
       setIsLoading(true);
       try {
@@ -101,7 +117,7 @@ export const useApi = <T>(apiOptions: ApiRequestOptions): ApiResult<T> => {
 
       return null;
     },
-    [cache]
+    [cache, item, isPublic]
   );
 
   React.useEffect(() => {

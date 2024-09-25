@@ -48,7 +48,7 @@ namespace BusinessLogic.Administration
 
                     var userId = await _unitOfWork.UserRepository.AddAsync(newUser);
 
-                    await _unitOfWork.SaveChanges(null);
+                    await _unitOfWork.SaveChanges();
 
                     return userId != null;
                 }
@@ -67,7 +67,7 @@ namespace BusinessLogic.Administration
                     TimeStamp = DateTime.Now
                 });
 
-                await _unitOfWork.SaveChanges(null);
+                await _unitOfWork.SaveChanges();
 
                 return false;
             }

@@ -1,7 +1,9 @@
 import { Login } from 'src/form';
+import { IJwtData } from './Interfaces/IUserData';
 
 export enum LocalStorageKeyEnum {
   LoginData = 'LoginData',
+  JwtData = 'JwtData',
 }
 
 type StorageValues = {
@@ -9,6 +11,7 @@ type StorageValues = {
 };
 const defaultValuesDictionary: StorageValues = {
   [LocalStorageKeyEnum.LoginData]: { email: '', password: '', remember: false } as Login,
+  [LocalStorageKeyEnum.JwtData]: { jwtToken: '', refreshToken: '' } as IJwtData,
 };
 
 export class LocalStorage {

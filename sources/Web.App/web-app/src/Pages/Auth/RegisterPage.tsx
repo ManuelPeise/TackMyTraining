@@ -4,6 +4,7 @@ import FormInput from 'src/Components/Input/Form/FormInput';
 import SaveCancelButtons from 'src/Components/Input/Form/SaveCancelButtons';
 import { TValue } from 'src/customTypes';
 import { Registration } from 'src/form';
+import { useAuthentication } from 'src/Hooks/useAuthentication';
 import { useFormModel } from 'src/Hooks/useFormModel';
 import { useI18n } from 'src/Hooks/useI18n';
 import { DataTypeEnum } from 'src/Lib/Enums/DataTypeEnum';
@@ -11,6 +12,7 @@ import { emailValidation, passwordValidation } from 'src/Lib/validation';
 
 const RegisterPage: React.FC = () => {
   const { getResource } = useI18n();
+  const { onRegistration } = useAuthentication();
   const form = useFormModel<Registration, TValue>(
     { firstName: '', lastName: '', dateOfBirth: null, email: '', password: '', confirmPassword: '' },
     [
@@ -19,9 +21,21 @@ const RegisterPage: React.FC = () => {
       { key: 'dateOfBirth', required: true, type: DataTypeEnum.Date },
       { key: 'email', required: true, type: DataTypeEnum.Text, validationCallback: emailValidation },
       { key: 'password', required: true, type: DataTypeEnum.Password, validationCallback: passwordValidation },
-      { key: 'confirmPassword', required: true, type: DataTypeEnum.Password },
+      { key: 'confirmPassword', required: true, type: DataTypeEnum.Password, validationCallback: passwordValidation },
     ]
   );
+
+  const handleRegistration = React.useCallback(async () => {
+    if (form.state.password === form.state.confirmPassword) {
+      await onRegistration({
+        firstName: form.state.firstName,
+        lastName: form.state.lastName,
+        email: form.state.email,
+        dateOfBirth: form.state.dateOfBirth,
+        password: form.state.password,
+      });
+    }
+  }, [form, onRegistration]);
 
   return (
     <Grid2
@@ -82,7 +96,7 @@ const RegisterPage: React.FC = () => {
           cancelDisabled={form.isModified}
           saveDisabled={form.formIsValid}
           cancelAction={form.resetForm}
-          onAction={() => {}}
+          onAction={handleRegistration}
         />
       </List>
     </Grid2>

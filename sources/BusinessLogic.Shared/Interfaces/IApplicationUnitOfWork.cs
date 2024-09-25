@@ -8,6 +8,6 @@ namespace BusinessLogic.Shared.Interfaces
         public RepositoryBase<AppUser> UserRepository { get; }
         public RepositoryBase<UserCredentials> UserCredentialsRepository { get; }
         public RepositoryBase<LogMessage> LogRepository { get; }
-        Task SaveChanges(string? userName);
+        Task SaveChanges();
     }
 }

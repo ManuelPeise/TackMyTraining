@@ -5,4 +5,14 @@ export interface IUserData {
   email: string;
   displayName: string;
   dateOfBirth: string;
+  jwtData: IJwtData;
+}
+
+export interface IJwtData {
+  jwtToken: string;
+  refreshToken: string;
+}
+
+export interface IRegistrationResult {
+  success: boolean;
 }
