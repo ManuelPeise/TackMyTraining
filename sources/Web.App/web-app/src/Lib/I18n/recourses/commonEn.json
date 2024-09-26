@@ -1,5 +1,6 @@
 {
   "CaptionLogin": "Login to your account!",
+  "captionDashboard": "Dashboard",
   "captionRegistration": "Register your account!",
   "errorInvalidDateOfBirth": "Please enter your date of birth!",
   "errorInvalidEmailAddress": "Enter a valid email address!",

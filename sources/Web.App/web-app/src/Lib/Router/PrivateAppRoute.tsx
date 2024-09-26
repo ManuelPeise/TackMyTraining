@@ -12,7 +12,7 @@ const PrivateAppRoute: React.FC = () => {
       <Grid2 bgcolor={colors.buttons.BackgroundDisabled} height={200} size={2}>
         Menu
       </Grid2>
-      <Grid2 size={7}>
+      <Grid2 size={10}>
         <Outlet />
       </Grid2>
     </Grid2>

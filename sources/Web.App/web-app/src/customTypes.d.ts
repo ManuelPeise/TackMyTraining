@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { DashboardTileTypeEnum } from './Lib/Enums/DashboardTileTypeEnum';
 
 export type CompareFunction<TState> = (originalValue: TState, compareValue: TState) => boolean;
 
@@ -31,3 +32,14 @@ export type Required<T> = {
 };
 
 export type TValue = string | number | boolean | Moment;
+
+export interface IDimensionSize {
+  xs: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'grow';
+  md?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'grow';
+  xl?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 'grow';
+}
+
+type DashboardTileConfiguration = {
+  size: IDimensionSize;
+  type: DashboardTileTypeEnum;
+};
