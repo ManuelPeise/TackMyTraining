@@ -16,7 +16,7 @@ export const AuthContextProvider: React.FC<IAuthContextProps> = (props) => {
   const [userData, setUserData] = React.useState<IUserData | null>(null);
 
   const loginStorage = useLocalStorage<Login>(LocalStorageKeyEnum.LoginData);
-  const jwtStorage = useLocalStorage<IJwtData>(LocalStorageKeyEnum.JwtData);
+  // const jwtStorage = useLocalStorage<IJwtData>(LocalStorageKeyEnum.JwtData);
   const navigate = useNavigate();
 
   const loginApi = useApi<IUserData>({ serviceUrl: serviceUrls.auth.login }, true);
@@ -30,7 +30,7 @@ export const AuthContextProvider: React.FC<IAuthContextProps> = (props) => {
         setIsAuthenticated(true);
         setUserData(loginResult);
 
-        jwtStorage.setStorageItem(loginResult.jwtData);
+        // jwtStorage.setStorageItem(loginResult.jwtData);
 
         if (loginData.remember) {
           loginStorage.setStorageItem(loginData);
@@ -42,7 +42,7 @@ export const AuthContextProvider: React.FC<IAuthContextProps> = (props) => {
       } else {
       }
     },
-    [loginApi, loginStorage, jwtStorage, navigate]
+    [loginApi, loginStorage, navigate]
   );
 
   const onRegistration = React.useCallback(
@@ -61,8 +61,8 @@ export const AuthContextProvider: React.FC<IAuthContextProps> = (props) => {
   const onLogout = React.useCallback(async () => {
     setUserData(null);
     setIsAuthenticated(false);
-    jwtStorage.removeItem();
-  }, [jwtStorage]);
+    // jwtStorage.removeItem();
+  }, []);
 
   return (
     <AuthContext.Provider

@@ -8,7 +8,7 @@ const DashboardToolbar: React.FC<IProps> = (props) => {
   const { getResource } = useI18n();
 
   return (
-    <Paper elevation={2} sx={{ width: '100%', padding: 2 }}>
+    <Paper elevation={4} sx={{ width: '100%', padding: 2 }}>
       <Box>
         <Typography variant="h5">{getResource('common:captionDashboard')}</Typography>
       </Box>

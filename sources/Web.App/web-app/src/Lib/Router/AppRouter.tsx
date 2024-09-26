@@ -7,12 +7,15 @@ import PageLayout from 'src/Components/Containers/PageLayout';
 import { AuthContextProvider } from '../Context/AuthContext';
 import LoginPage from 'src/Pages/Auth/LoginPage';
 import RegisterPage from 'src/Pages/Auth/RegisterPage';
+import AppToolBar from 'src/Components/AppBar/ToolBar';
+import SandBox from 'src/Pages/Sandbox/Sandbox';
 
 const AppRouter: React.FC = () => {
   return (
-    <BrowserRouter basename="/trainingstracker">
+    <BrowserRouter basename="/training">
       <AuthContextProvider>
         <PageLayout>
+          <AppToolBar />
           <Routes>
             <Route path="" Component={LandingPage} />
             <Route path="/login" Component={LoginPage} />
@@ -20,6 +23,7 @@ const AppRouter: React.FC = () => {
             {/* private routes */}
             <Route path="/" element={<PrivateAppRoute />}>
               <Route path="/dashboard" Component={Dashboard} />
+              <Route path="/sandbox" Component={SandBox} />
             </Route>
           </Routes>
         </PageLayout>

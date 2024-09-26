@@ -12,7 +12,7 @@ const AppToolBar: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <AppBar color="default">
+    <AppBar id="app-bar" color="default" position="relative">
       <Toolbar>
         <Typography
           variant="h6"

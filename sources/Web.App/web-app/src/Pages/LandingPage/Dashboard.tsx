@@ -10,7 +10,7 @@ const Dashboard: React.FC = () => {
         height: '100vh',
         display: 'flex',
         backgroundColor: '#f2f2f2',
-        padding: 10,
+        padding: 2,
       }}
       gap={3}
       justifyContent="flex-start"
