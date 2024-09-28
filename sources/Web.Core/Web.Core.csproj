@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic.Administration\BusinessLogic.Administration.csproj" />
+    <ProjectReference Include="..\BusinessLogic.Health\BusinessLogic.Health.csproj" />
     <ProjectReference Include="..\BusinessLogic.Shared\BusinessLogic.Shared.csproj" />
     <ProjectReference Include="..\Data.TrainingContext\Data.TrainingContext.csproj" />
     <ProjectReference Include="..\Service.Api\Service.Api.csproj" />

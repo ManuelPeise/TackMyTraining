@@ -16,6 +16,7 @@ namespace Data.TrainingContext
         public DbSet<AppUser> AppUser { get; set; }
         public DbSet<UserCredentials> AppUserCredentials { get; set; }
         public DbSet<LogMessage> MessageLog { get; set; }
+        public DbSet<UserHealthData> HealthDatas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

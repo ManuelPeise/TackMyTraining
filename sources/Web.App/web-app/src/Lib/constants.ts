@@ -27,3 +27,7 @@ export const registerDialogInitializationProps: DialogInitializationProps = {
   onAction: () => {},
   onCancel: () => {},
 };
+
+export const dateFormats = {
+  YearMonthDay: 'YYYY-MM-DD',
+};

@@ -28,7 +28,8 @@ export const useFormModel = <TModel, TValue>(
 
     settings.forEach((setting) => {
       if (!members[setting.key]) {
-        const validationCallBack = setting.validationCallback === undefined ? undefined : setting.validationCallback;
+        const validationCallBack =
+          setting.required && setting.validationCallback === undefined ? undefined : setting.validationCallback;
 
         members[setting.key] = {
           property: setting.key,
@@ -49,8 +50,8 @@ export const useFormModel = <TModel, TValue>(
 
     const validationCallbacks: FormValidation<TValue>[] = [];
 
-    keys.forEach((key) => {
-      if (formMembers[key].validationFunction !== undefined) {
+    keys.forEach((key, index) => {
+      if (settings[index].required && formMembers[key].validationFunction !== undefined) {
         validationCallbacks.push({
           value: formMembers[key].value,
           cb: formMembers[key].validationFunction,
@@ -67,7 +68,7 @@ export const useFormModel = <TModel, TValue>(
     });
 
     return validationResult.every((value) => value);
-  }, [formMembers]);
+  }, [formMembers, settings]);
 
   const isModified = React.useMemo(() => {
     const keys = Object.keys(state) as Array<keyof TModel>;

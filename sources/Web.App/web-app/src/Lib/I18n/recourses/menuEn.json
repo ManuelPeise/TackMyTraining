@@ -1,6 +1,8 @@
 {
   "subTitleDashboard": "Your Dashboard",
+  "subTitleHealth": "Monitor your health data.",
+  "subTitleSandbox": "Your Sandbox",
   "titleDashboard": "Dashboard",
-  "titleSandbox": "Sandbox",
-  "subTitleSandbox": "Your Sandbox"
+  "titleHealth": "Health",
+  "titleSandbox": "Sandbox"
 }

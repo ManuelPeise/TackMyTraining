@@ -27,20 +27,22 @@ const AppSideMenuItem: React.FC<IProps> = (props) => {
       onClick={onClickCallback}
     >
       <Grid2 container>
-        <Grid2 size={3} alignContent="center">
+        <Grid2 alignContent="center" sx={{ width: '50px' }}>
           <ListItemIcon>{icon}</ListItemIcon>
         </Grid2>
-        <Grid2 size={9}>
-          <ListItemText>
-            <Typography variant="body1">{getResource(`menu:${titleResourceKey}`)}</Typography>
+        <Grid2>
+          <ListItemText sx={{ width: '100%' }}>
+            <Typography variant="body1" sx={{ width: '100%' }}>
+              {getResource(`menu:${titleResourceKey}`)}
+            </Typography>
           </ListItemText>
-          <ListItemText>
+          <ListItemText sx={{ width: '100%' }}>
             {subTitleResourceKey ? (
-              <Typography height={16} color="#bfbfbf" variant="body2">
+              <Typography height={16} color="#bfbfbf" variant="body2" sx={{ width: '100%' }}>
                 {getResource(`menu:${subTitleResourceKey}`)}
               </Typography>
             ) : (
-              <Typography height={16} variant="body2"></Typography>
+              <Typography height={16} variant="body2" sx={{ width: '100%' }}></Typography>
             )}
           </ListItemText>
         </Grid2>

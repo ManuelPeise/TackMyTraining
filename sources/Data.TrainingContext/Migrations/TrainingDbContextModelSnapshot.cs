@@ -72,7 +72,7 @@ namespace Data.TrainingContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = "2024-09-25",
+                            CreatedAt = "2024-09-28",
                             CreatedBy = "System",
                             CrendentialsId = 1,
                             DateOfBirth = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -80,7 +80,7 @@ namespace Data.TrainingContext.Migrations
                             FirstName = "",
                             IsActive = true,
                             LastName = "",
-                            UpdatedAt = "2024-09-25",
+                            UpdatedAt = "2024-09-28",
                             UpdatedBy = "System"
                         });
                 });
@@ -176,16 +176,67 @@ namespace Data.TrainingContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = "2024-09-25",
+                            CreatedAt = "2024-09-28",
                             CreatedBy = "System",
                             FailedLoginAttemts = 0,
                             JwT = "",
-                            Password = "U3VwZXJTZWNyZXQyMjVlNDEzNi1iYmQ2LTQ4MzgtOTcyMy1hZDMwOWU2M2JlODY=",
+                            Password = "U3VwZXJTZWNyZXQ3OTcwOWNkMC1jZmY4LTRhZmUtOGMzMi04MWFjOWYyNWJiZjU=",
                             RefreshToken = "",
-                            Salt = "225e4136-bbd6-4838-9723-ad309e63be86",
-                            UpdatedAt = "2024-09-25",
+                            Salt = "79709cd0-cff8-4afe-8c32-81ac9f25bbf5",
+                            UpdatedAt = "2024-09-28",
                             UpdatedBy = "System"
                         });
+                });
+
+            modelBuilder.Entity("Data.Models.Entities.UserHealthData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("BodyFat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("BodyMassIndex")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal?>("HeartBeat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Height")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("MuscleMass")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HealthDatas");
                 });
 
             modelBuilder.Entity("Data.Models.Entities.AppUser", b =>

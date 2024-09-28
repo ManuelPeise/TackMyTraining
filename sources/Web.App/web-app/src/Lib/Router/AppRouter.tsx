@@ -9,6 +9,7 @@ import LoginPage from 'src/Pages/Auth/LoginPage';
 import RegisterPage from 'src/Pages/Auth/RegisterPage';
 import AppToolBar from 'src/Components/AppBar/ToolBar';
 import SandBox from 'src/Pages/Sandbox/Sandbox';
+import HealthDataPage from 'src/Pages/HealthDataMonitor/HealthDataPage';
 
 const AppRouter: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const AppRouter: React.FC = () => {
             {/* private routes */}
             <Route path="/" element={<PrivateAppRoute />}>
               <Route path="/dashboard" Component={Dashboard} />
+              <Route path="/health" Component={HealthDataPage} />
               <Route path="/sandbox" Component={SandBox} />
             </Route>
           </Routes>

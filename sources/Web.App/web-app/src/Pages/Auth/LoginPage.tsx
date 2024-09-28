@@ -36,7 +36,7 @@ const LoginPage: React.FC = () => {
             style={{ height: 100, width: 100, borderRadius: '50%', backgroundColor: 'red' }}
           ></ListItemAvatar>
           <ListItemText style={{ textAlign: 'center', color: '#3236a8' }}>
-            <Typography variant="h6">{getResource('common:CaptionLogin')}</Typography>
+            <Typography variant="h6">{getResource('common:captionLogin')}</Typography>
           </ListItemText>
         </ListItem>
         <FormInput
@@ -58,8 +58,8 @@ const LoginPage: React.FC = () => {
           {...form.formMembers.remember}
         />
         <SaveCancelButtons
-          saveDisabled={form.formIsValid}
-          cancelDisabled={form.isModified}
+          saveDisabled={!form.formIsValid}
+          cancelDisabled={!form.isModified}
           cancelLabel={getResource('common:labelCancel')}
           actionLabel={getResource('common:labelLogin')}
           cancelAction={form.resetForm}

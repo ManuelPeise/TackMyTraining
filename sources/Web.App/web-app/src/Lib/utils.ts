@@ -67,3 +67,14 @@ export const formReducer = <TState>(
   }
   return prevState;
 };
+
+export const getBmi = (height: number, weight: number) => {
+  const calculationHeight = parseFloat(height.toString().replace(',', '.'));
+  const calculationWeight = parseFloat(weight.toString().replace(',', '.'));
+
+  return calculationWeight / (calculationHeight * calculationHeight);
+};
+
+export const toCaption = (value: string) => {
+  return value.toUpperCase();
+};

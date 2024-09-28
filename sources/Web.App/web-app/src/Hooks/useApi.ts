@@ -14,12 +14,12 @@ type ApiRequestOptions = {
   body?: string;
 };
 
-type ApiResult<T> = {
+export type ApiResult<T> = {
   result: T;
   isLoading: boolean;
   error: string | null;
   get: (forceRequest?: boolean, options?: ApiRequestOptions) => Promise<void>;
-  post: (options?: ApiRequestOptions, data?: string) => Promise<T | null>;
+  post: (options: ApiRequestOptions, data?: any) => Promise<T | null>;
 };
 
 export const serviceUrls = {
@@ -27,10 +27,15 @@ export const serviceUrls = {
     login: 'LoginService/Login',
     registration: 'UserRegistration/RegisterUser',
   },
-  test: 'Test/Tester',
+  health: {
+    getLastDataSet: 'HealthData/GetLastHealthDataSet',
+    statisticData: 'HealthData/GetStatisticData',
+    dataImport: 'HealthDataImport/Import',
+  },
+  // test: 'Test/Tester',
 };
 
-export const useApi = <T>(apiOptions: ApiRequestOptions, isPublic: boolean = false): ApiResult<T> => {
+export const useApi = <T>(apiOptions: ApiRequestOptions, force?: boolean, isPublic: boolean = false): ApiResult<T> => {
   const { item } = useLocalStorage<IJwtData>(LocalStorageKeyEnum.JwtData);
 
   const defaultRequestOptionsRef = React.useRef<ApiRequestOptions>(apiOptions);
@@ -78,13 +83,7 @@ export const useApi = <T>(apiOptions: ApiRequestOptions, isPublic: boolean = fal
   );
 
   const post = React.useCallback(
-    async (options?: ApiRequestOptions, data?: string): Promise<T | null> => {
-      if (options) {
-        defaultRequestOptionsRef.current = options;
-      }
-
-      cache[defaultRequestOptionsRef.current.serviceUrl] = {} as T;
-
+    async (options: ApiRequestOptions, data?: any): Promise<T | null> => {
       if (!isPublic) {
         AxiosClient.defaults.headers.common['Authorization'] = `bearer ${item.jwtToken}`;
       }
@@ -92,9 +91,8 @@ export const useApi = <T>(apiOptions: ApiRequestOptions, isPublic: boolean = fal
       setError(null);
       setIsLoading(true);
       try {
-        await AxiosClient.post(defaultRequestOptionsRef.current.serviceUrl, data, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        await AxiosClient.post(options.serviceUrl, data, {
+          headers: { 'content-type': 'application/json' },
         }).then(async (res) => {
           if (res.status === 200) {
             console.log(`data received...`);
@@ -121,9 +119,9 @@ export const useApi = <T>(apiOptions: ApiRequestOptions, isPublic: boolean = fal
   );
 
   React.useEffect(() => {
-    if (!cache[defaultRequestOptionsRef.current.serviceUrl] && defaultRequestOptionsRef.current.parameters != null) {
+    if (force) {
       const loadData = async () => {
-        await get();
+        await get(true);
       };
 
       loadData();

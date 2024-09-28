@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.TrainingContext.Migrations
 {
     [DbContext(typeof(TrainingDbContext))]
-    [Migration("20240925212834_InitializeDatabase")]
+    [Migration("20240928074411_InitializeDatabase")]
     partial class InitializeDatabase
     {
         /// <inheritdoc />
@@ -70,6 +70,22 @@ namespace Data.TrainingContext.Migrations
                     b.HasIndex("CrendentialsId");
 
                     b.ToTable("AppUser");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "2024-09-28",
+                            CreatedBy = "System",
+                            CrendentialsId = 1,
+                            DateOfBirth = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "test@training.com",
+                            FirstName = "",
+                            IsActive = true,
+                            LastName = "",
+                            UpdatedAt = "2024-09-28",
+                            UpdatedBy = "System"
+                        });
                 });
 
             modelBuilder.Entity("Data.Models.Entities.LogMessage", b =>
@@ -158,6 +174,72 @@ namespace Data.TrainingContext.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppUserCredentials");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "2024-09-28",
+                            CreatedBy = "System",
+                            FailedLoginAttemts = 0,
+                            JwT = "",
+                            Password = "U3VwZXJTZWNyZXQ3OTcwOWNkMC1jZmY4LTRhZmUtOGMzMi04MWFjOWYyNWJiZjU=",
+                            RefreshToken = "",
+                            Salt = "79709cd0-cff8-4afe-8c32-81ac9f25bbf5",
+                            UpdatedAt = "2024-09-28",
+                            UpdatedBy = "System"
+                        });
+                });
+
+            modelBuilder.Entity("Data.Models.Entities.UserHealthData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("BodyFat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("BodyMassIndex")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal?>("HeartBeat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Height")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("MuscleMass")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HealthDatas");
                 });
 
             modelBuilder.Entity("Data.Models.Entities.AppUser", b =>

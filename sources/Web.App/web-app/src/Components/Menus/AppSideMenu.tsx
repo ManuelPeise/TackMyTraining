@@ -1,7 +1,7 @@
 import React from 'react';
 import { List } from '@mui/material';
 import AppSideMenuItem from './AppSideMenuItem';
-import { Dashboard, Science } from '@mui/icons-material';
+import { Dashboard, Science, HealthAndSafety } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const AppSideMenu: React.FC = () => {
@@ -26,14 +26,21 @@ const AppSideMenu: React.FC = () => {
         titleResourceKey="titleDashboard"
         subTitleResourceKey="subTitleDashboard"
         icon={<Dashboard sx={{ height: 32, width: 32 }} />}
-        selected={selectedItem === '/training/dashboard'}
+        selected={selectedItem.includes('dashboard')}
         onClickCallback={onClick.bind(null, 'dashboard')}
+      />
+      <AppSideMenuItem
+        titleResourceKey="titleHealth"
+        subTitleResourceKey="subTitleHealth"
+        icon={<HealthAndSafety sx={{ height: 32, width: 32 }} />}
+        selected={selectedItem.includes('health')}
+        onClickCallback={onClick.bind(null, 'health')}
       />
       <AppSideMenuItem
         titleResourceKey="titleSandbox"
         subTitleResourceKey="subTitleSandbox"
         icon={<Science sx={{ height: 32, width: 32 }} />}
-        selected={selectedItem === '/training/sandbox'}
+        selected={selectedItem.includes('sandbox')}
         onClickCallback={onClick.bind(null, 'sandbox')}
       />
     </List>

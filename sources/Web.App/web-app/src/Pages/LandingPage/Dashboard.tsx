@@ -1,6 +1,6 @@
 import { Grid2 } from '@mui/material';
 import React from 'react';
-import DashboardToolbar from 'src/Components/Dashboard/DashboardToolBar';
+import PageToolbar from 'src/Components/AppBar/PageToolBar';
 
 const Dashboard: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const Dashboard: React.FC = () => {
       container
     >
       <Grid2 container sx={{ width: '100%' }}>
-        <DashboardToolbar />
+        <PageToolbar resourceKey="captionDashboard" />
       </Grid2>
       <Grid2 container direction="row" spacing={0} wrap="wrap" sx={{ width: '100%' }}>
         <Grid2 container spacing={0} rowSpacing={2} columnSpacing={1} sx={{ width: '100%' }}></Grid2>

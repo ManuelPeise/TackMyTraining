@@ -115,8 +115,8 @@ namespace BusinessLogic.Administration
         {
             return new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-                new Claim(ClaimValueTypes.Email,account.Email),
+                new Claim("UserId", account.Id.ToString()),
+                new Claim("Email",account.Email),
                 new Claim("UserName", account.UserName),
                 new Claim("FirstName", account.FirstName ?? ""),
                 new Claim("LastName", account.LastName ?? ""),

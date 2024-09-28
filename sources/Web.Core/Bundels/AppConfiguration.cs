@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Administration;
+using BusinessLogic.Health;
 using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
 using Data.TrainingContext;
@@ -33,6 +34,7 @@ namespace Web.Core.Bundels
             builder.Services.AddScoped<IApplicationUnitOfWork, ApplicationUnitOfWork>();
             builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
             builder.Services.AddScoped<IUserLoginService, UserLoginService>();
+            builder.Services.AddScoped<IHealthModule, HealthModule>();
 
             ConfigureJwt(builder);
 

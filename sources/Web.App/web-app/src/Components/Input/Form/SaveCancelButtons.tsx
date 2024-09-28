@@ -19,31 +19,65 @@ const SaveCancelButtons: React.FC<IProps> = (props) => {
   const cancelButtonButtonStyle = React.useMemo((): CSSProperties => {
     return {
       borderRadius: 25,
-      backgroundColor: !cancelDisabled ? colors.buttons.BackgroundDisabled : colors.buttons.ActiveCancel,
-      color: !cancelDisabled ? colors.buttons.FontDisabled : colors.buttons.FontActiveWhite,
+      backgroundColor: cancelDisabled ? colors.buttons.BackgroundDisabled : colors.buttons.ActiveCancel,
+      color: cancelDisabled ? colors.buttons.FontDisabled : colors.buttons.FontActiveWhite,
     };
   }, [cancelDisabled]);
 
   const saveButtonButtonStyle = React.useMemo((): CSSProperties => {
     return {
       borderRadius: 25,
-      backgroundColor: !saveDisabled
-        ? colors.buttons.BackgroundDisabledConfirm
-        : colors.buttons.BackgroundActiveConfirm,
-      color: !saveDisabled ? colors.buttons.FontDisabled : colors.buttons.FontActiveWhite,
+      backgroundColor: saveDisabled ? colors.buttons.BackgroundDisabledConfirm : colors.buttons.BackgroundActiveConfirm,
+      color: saveDisabled ? colors.buttons.FontDisabled : colors.buttons.FontActiveWhite,
     };
   }, [saveDisabled]);
+
+  const handleCancel = React.useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      cancelAction();
+    },
+    [cancelAction]
+  );
+
+  const handleSave = React.useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      onAction();
+    },
+    [onAction]
+  );
 
   return (
     <ListItem style={{ display: 'flex', justifyContent: placement ?? 'end', flexDirection: 'row', width: width }}>
       <Grid2 spacing={10} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
         <Grid2 padding={1.5}>
-          <Button disabled={!cancelDisabled} sx={cancelButtonButtonStyle} onClick={cancelAction}>
+          <Button
+            disabled={cancelDisabled}
+            sx={{
+              ...cancelButtonButtonStyle,
+              '&:hover': {
+                color: '#fff',
+                cursor: 'pointer',
+              },
+            }}
+            onClick={handleCancel}
+          >
             {cancelLabel}
           </Button>
         </Grid2>
         <Grid2 padding={1.5}>
-          <Button disabled={!saveDisabled} sx={saveButtonButtonStyle} onClick={onAction}>
+          <Button
+            disabled={saveDisabled}
+            sx={{
+              ...saveButtonButtonStyle,
+              '&:hover': {
+                color: '#fff',
+                cursor: 'pointer',
+              },
+            }}
+            onClick={handleSave}
+          >
             {actionLabel}
           </Button>
         </Grid2>

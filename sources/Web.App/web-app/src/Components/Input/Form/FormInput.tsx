@@ -17,6 +17,7 @@ interface IProps {
   error: string;
   required: boolean;
   position?: 'start' | 'end' | 'center';
+  maxDate?: moment.Moment;
   updateFunction: (value: TValue) => void;
   validationFunction?: (value: TValue) => boolean;
 }
@@ -28,7 +29,7 @@ const getDataType = (dataType: DataTypeEnum) => {
     case DataTypeEnum.Password:
       return 'password';
     case DataTypeEnum.Number:
-      return 'number';
+      return 'text';
     case DataTypeEnum.Boolean:
       return 'boolean';
     case DataTypeEnum.Date:
@@ -49,6 +50,7 @@ const FormTextInput: React.FC<IProps> = (props) => {
   const onBlur = React.useCallback(() => {
     if (validationFunction !== undefined && (value as string).length) {
       const result = validationFunction(value as string);
+
       setIsValid(result);
     } else {
       setIsValid(true);
@@ -115,7 +117,7 @@ const FormCheckBox: React.FC<IProps> = (props) => {
 };
 
 const FormDatePicker: React.FC<IProps> = (props) => {
-  const { property, value, disabled, label, position, updateFunction } = props;
+  const { property, value, disabled, label, position, maxDate, updateFunction } = props;
 
   const handleChange = React.useCallback(
     (newValue: Moment | null) => {
@@ -142,9 +144,67 @@ const FormDatePicker: React.FC<IProps> = (props) => {
           value={moment(value as string)}
           disabled={disabled}
           onChange={handleChange}
+          maxDate={maxDate}
           slotProps={{ textField: { variant: 'standard' } }}
         />
       </LocalizationProvider>
+    </ListItem>
+  );
+};
+
+const FormNumberInput: React.FC<IProps> = (props) => {
+  const { property, fullWidth, value, dataType, required, disabled, error, label, updateFunction, validationFunction } =
+    props;
+
+  const [isValid, setIsValid] = React.useState<boolean>(true);
+
+  React.useEffect(() => {
+    if ((value as string).length === 0) setIsValid(true);
+  }, [value]);
+
+  const onBlur = React.useCallback(() => {
+    if (validationFunction !== undefined && (value as string).length) {
+      const result = validationFunction(value as string);
+      setIsValid(result);
+    } else {
+      setIsValid(true);
+    }
+  }, [value, validationFunction]);
+
+  const handleChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const currentValue = e.currentTarget.value;
+
+      updateFunction(currentValue);
+    },
+    [updateFunction]
+  );
+
+  return (
+    <ListItem key={property}>
+      <TextField
+        id={property}
+        required={required}
+        fullWidth={fullWidth}
+        label={label}
+        type={getDataType(dataType)}
+        variant="standard"
+        disabled={disabled}
+        value={value}
+        error={!isValid}
+        helperText={!isValid ? error : ''}
+        slotProps={{
+          input: {
+            slotProps: {
+              input: {
+                style: { textAlign: 'right', MozAppearance: 'textfield' },
+              },
+            },
+          },
+        }}
+        onChange={handleChange}
+        onBlur={onBlur}
+      />
     </ListItem>
   );
 };
@@ -157,6 +217,7 @@ const FormInput: React.FC<IProps> = (props) => {
     case DataTypeEnum.Password:
       return <FormTextInput {...props} />;
     case DataTypeEnum.Number:
+      return <FormNumberInput {...props} />;
     case DataTypeEnum.Boolean:
       return <FormCheckBox {...props} />;
     case DataTypeEnum.Date:

@@ -93,8 +93,8 @@ const RegisterPage: React.FC = () => {
           width="100%"
           actionLabel={getResource('common:labelRegister')}
           cancelLabel={getResource('common:labelCancel')}
-          cancelDisabled={form.isModified}
-          saveDisabled={form.formIsValid}
+          cancelDisabled={!form.isModified}
+          saveDisabled={!form.formIsValid}
           cancelAction={form.resetForm}
           onAction={handleRegistration}
         />
