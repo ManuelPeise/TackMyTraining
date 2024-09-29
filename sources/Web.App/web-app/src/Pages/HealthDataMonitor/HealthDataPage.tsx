@@ -1,4 +1,4 @@
-import { Grid2 } from '@mui/material';
+import { Grid2, Paper } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 import PageToolbar from 'src/Components/AppBar/PageToolBar';
@@ -16,11 +16,16 @@ import { useLocalStorage } from 'src/Hooks/useLocalStorage';
 import { LocalStorageKeyEnum } from 'src/Lib/LocalStorage';
 import { IJwtData } from 'src/Lib/Interfaces/IUserData';
 import { dateFormats } from 'src/Lib/constants';
+import CustomChart from 'src/Components/Charts/CustomChart';
+import { ChartConfigurationProps, useChart } from 'src/Hooks/useChart';
+import { colors } from 'src/Lib/colors';
+import { useStatefulApi } from 'src/Hooks/useStateFulApi';
 
 interface IHealthDataPageProps {
   healthData: HealthData;
-  statisticData: HealthStatisticData[];
+  // statisticData: HealthStatisticData[];
   healthDataSetApi: StatelessApi<HealthData>;
+  statisticApi: StatelessApi<HealthStatisticData[]>;
   saveHealthData: (dataset: HealthData) => Promise<boolean>;
 }
 
@@ -30,8 +35,8 @@ type HealthPageData = {
 };
 
 const initialData: HealthPageData = {
-  from: moment().subtract(6, 'days'),
-  to: moment().add(1, 'days'),
+  from: moment().subtract(7, 'days'),
+  to: moment(),
 };
 
 const initializeAsync = async (range: TimeRange, token: string): Promise<IHealthDataPageProps> => {
@@ -51,7 +56,7 @@ const initializeAsync = async (range: TimeRange, token: string): Promise<IHealth
     token
   );
 
-  const [healthDataset, statisticData] = await Promise.all([healthDatasetApi.get(), healthStatisticApi.get()]);
+  let [healthDataset] = await Promise.all([healthDatasetApi.get()]);
 
   const saveHealthDataCallback = async (dataset: HealthData): Promise<boolean> => {
     return await healthDatasetApi.post<boolean>({ serviceUrl: serviceUrls.health.dataImport }, dataset);
@@ -59,8 +64,9 @@ const initializeAsync = async (range: TimeRange, token: string): Promise<IHealth
 
   return {
     healthData: healthDataset,
-    statisticData: statisticData,
+    // statisticData: statisticData,
     healthDataSetApi: healthDatasetApi,
+    statisticApi: healthStatisticApi,
     saveHealthData: saveHealthDataCallback,
   };
 };
@@ -77,15 +83,94 @@ const HealthDataPage: React.FC = () => {
     { key: 'to', required: true, type: DataTypeEnum.Date },
   ]);
 
-  const timeRange = React.useMemo((): TimeRange => {
-    return { from: healthDataForm.state.from, to: healthDataForm.state.to };
-  }, [healthDataForm]);
-
   const initializationProps = useComponentInitialization<IHealthDataPageProps>(
-    initializeAsync.bind(null, timeRange, tokenStorage.item.jwtToken)
+    initializeAsync.bind(
+      null,
+      { from: healthDataForm.state.from, to: healthDataForm.state.to },
+      tokenStorage.item.jwtToken
+    )
   );
 
+  const statisticApiService = useStatefulApi(initializationProps?.props?.statisticApi);
+
+  const chartConfig = React.useMemo(() => {
+    const config: { [key: string]: ChartConfigurationProps } = {
+      heartBeat: {
+        label: getResource('common:labelHeartBeat'),
+        color: 'red',
+      },
+      weight: {
+        label: getResource('common:labelWeight'),
+        color: 'blue',
+      },
+      bmi: {
+        label: getResource('common:labelBodyMassIndex'),
+        color: 'yellow',
+      },
+      bodyFat: {
+        label: getResource('common:labelBodyFat'),
+        color: 'green',
+      },
+      muscleMass: {
+        label: getResource('common:labelMuscleMass'),
+        color: 'purple',
+      },
+    };
+
+    return config;
+  }, [getResource]);
+
+  const healthStatistics = React.useMemo(() => {
+    const array: HealthData[] = [];
+    statisticApiService.data?.forEach((data) => {
+      array.push(data.healthData);
+    });
+
+    return array;
+  }, [statisticApiService]);
+
   const [lastHealthDataSet, setLastHealthDataSet] = React.useState<HealthData>(initializationProps?.props?.healthData);
+
+  const { type, options, data } = useChart<HealthData>(
+    {
+      labelKey: 'date',
+      keys: ['weight', 'bmi', 'bodyFat', 'muscleMass', 'heartBeat'],
+      model: healthStatistics,
+      chartConfiguration: chartConfig,
+      bottomLabelLength: 10,
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: getResource('common:labelChartBottom'),
+            color: colors.text.dialogCaption,
+            font: {
+              family: 'Serif',
+              size: 20,
+              weight: 'bold',
+              lineHeight: 1.5,
+            },
+          },
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: getResource('common:labelChartValue'),
+            color: colors.text.dialogCaption,
+            font: {
+              family: 'Sans-serif',
+              size: 20,
+              weight: 'bold',
+              lineHeight: 1.5,
+            },
+          },
+        },
+      },
+    },
+    getResource('common:captionHealthDataMonitor')
+  );
 
   const handleOpenDialog = React.useCallback(() => {
     setDialogOpen(true);
@@ -97,8 +182,9 @@ const HealthDataPage: React.FC = () => {
 
   const refreshLastHealthDataSet = React.useCallback(async () => {
     const result = await initializationProps.props.healthDataSetApi.get();
+    await statisticApiService.get();
     setLastHealthDataSet(result);
-  }, [initializationProps]);
+  }, [initializationProps, statisticApiService]);
 
   React.useEffect(() => {
     if (initializationProps?.props?.healthData !== undefined) {
@@ -106,11 +192,23 @@ const HealthDataPage: React.FC = () => {
     }
   }, [initializationProps?.props?.healthData]);
 
+  React.useEffect(() => {
+    const onLoad = async () => {
+      const parameters: { [key: string]: string } = {};
+      parameters['from'] = `${healthDataForm.state.from.format(dateFormats.YearMonthDay)}`;
+      parameters['to'] = `${healthDataForm.state.to.format(dateFormats.YearMonthDay)}`;
+      await statisticApiService.get({ parameters: parameters });
+    };
+
+    onLoad();
+
+    // eslint-disable-next-line
+  }, [healthDataForm.state]);
+
   if (!initializationProps.isInitialized) {
     return null;
   }
 
-  console.log(initializationProps.props.statisticData);
   return (
     <Grid2
       sx={{
@@ -120,7 +218,7 @@ const HealthDataPage: React.FC = () => {
         backgroundColor: '#f2f2f2',
         padding: 2,
       }}
-      gap={3}
+      rowSpacing={10}
       justifyContent="flex-start"
       alignItems="flex-start"
       alignContent="flex-start"
@@ -153,8 +251,10 @@ const HealthDataPage: React.FC = () => {
           </Grid2>
         </PageToolbar>
       </Grid2>
-      <Grid2 container direction="row" spacing={0} wrap="wrap" sx={{ width: '100%' }}>
-        <Grid2 container spacing={0} rowSpacing={2} columnSpacing={1} sx={{ width: '100%' }}></Grid2>
+      <Grid2 sx={{ width: '100%' }}>
+        <Paper elevation={4}>
+          <CustomChart type={type} options={options} data={data} />
+        </Paper>
       </Grid2>
       {dialogOpen && (
         <AddHealthDataDialog

@@ -32,5 +32,8 @@
   "labelMuscleMass": "Muscle mass",
   "labelBodyMassIndex": "Body mass Index",
   "labelHeartBeat": "Heartbeat",
-  "labelSave": "Save"
+  "labelSave": "Save",
+  "captionHealthDataMonitor": "HealthDataMonitor",
+  "labelChartValue": "Value",
+  "labelChartBottom": "Date"
 }

@@ -30,4 +30,5 @@ export const registerDialogInitializationProps: DialogInitializationProps = {
 
 export const dateFormats = {
   YearMonthDay: 'YYYY-MM-DD',
+  DayMonthYear: 'DD.MM.YY',
 };

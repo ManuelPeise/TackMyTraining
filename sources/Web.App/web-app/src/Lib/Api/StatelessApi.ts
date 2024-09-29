@@ -42,7 +42,11 @@ export class StatelessApi<T> {
 
   public error: string = this._error;
 
-  public get = async (): Promise<T> => {
+  public get = async (optionsUpdate?: Partial<StateLessApiOptions>): Promise<T> => {
+    if (optionsUpdate) {
+      this._options = { ...this._options, ...optionsUpdate };
+    }
+
     let response: T | null = null;
     try {
       AxiosClient.defaults.headers.common['Authorization'] = `bearer ${this._token}`;

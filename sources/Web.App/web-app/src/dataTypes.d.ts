@@ -24,7 +24,7 @@ export type HealthData = {
 
 export type HealthStatisticData = {
   date: moment.Moment;
-  healthData: HealthData[];
+  healthData: HealthData;
 };
 
 export type TimeRange = {

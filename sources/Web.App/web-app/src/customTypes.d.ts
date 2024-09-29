@@ -36,6 +36,7 @@ export type InitializationProps<T> = {
   isInitialized: boolean;
   props: T;
 };
+
 export type ComponentServiceType = {
   key: string;
 };
