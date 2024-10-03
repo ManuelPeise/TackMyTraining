@@ -1,6 +1,7 @@
 import { TValue } from 'src/customTypes';
+const ObjectName = 'Object';
 
-export const differsFromPrev = (a: unknown, b: unknown): boolean => {
+export const isNotEqualToPrev = (a: unknown, b: unknown): boolean => {
   if (a === b) {
     return false;
   }
@@ -9,8 +10,8 @@ export const differsFromPrev = (a: unknown, b: unknown): boolean => {
     if (Array.isArray(b) && a.length === 0 && b.length === 0) {
       return false;
     }
-  } else if (a != null && a.constructor.name === 'Object') {
-    if (b != null && b.constructor.name === 'Object' && Object.keys(a).length === 0 && Object.keys(b).length === 0) {
+  } else if (a != null && a.constructor.name === ObjectName) {
+    if (b != null && b.constructor.name === ObjectName && Object.keys(a).length === 0 && Object.keys(b).length === 0) {
       return false;
     }
   }
@@ -53,7 +54,7 @@ export const formReducer = <TState>(
     const objectKeys = Object.keys(newPartState) as Array<keyof TState>;
 
     stateChanged = objectKeys.some((key) => {
-      const isModified = differsFromPrev;
+      const isModified = isNotEqualToPrev;
 
       return isModified(prevState[key], newPartState[key]);
     });

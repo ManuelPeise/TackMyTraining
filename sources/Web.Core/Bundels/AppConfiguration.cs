@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Administration;
+using BusinessLogic.Dashboard;
 using BusinessLogic.Health;
 using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
@@ -35,7 +36,7 @@ namespace Web.Core.Bundels
             builder.Services.AddScoped<IUserRegistrationService, UserRegistrationService>();
             builder.Services.AddScoped<IUserLoginService, UserLoginService>();
             builder.Services.AddScoped<IHealthModule, HealthModule>();
-
+            builder.Services.AddScoped<IDashboardService, DashboardService>();
             ConfigureJwt(builder);
 
             builder.Services.AddCors(opt =>

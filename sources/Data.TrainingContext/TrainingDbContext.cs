@@ -5,18 +5,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace Data.TrainingContext
 {
-    public class TrainingDbContext: DbContext
+    public class TrainingDbContext : DbContext
     {
         private readonly IConfiguration _configuration;
-        public TrainingDbContext(DbContextOptions options, IConfiguration config):base(options) 
-        { 
-            _configuration = config; 
+        public TrainingDbContext(DbContextOptions options, IConfiguration config) : base(options)
+        {
+            _configuration = config;
         }
 
         public DbSet<AppUser> AppUser { get; set; }
         public DbSet<UserCredentials> AppUserCredentials { get; set; }
         public DbSet<LogMessage> MessageLog { get; set; }
         public DbSet<UserHealthData> HealthDatas { get; set; }
+        public DbSet<UserSettings> UserSettings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -64,7 +64,7 @@ export class StatelessApi<T> {
     return response;
   };
 
-  public post = async <TData>(options: StateLessApiOptions, data: any): Promise<TData> => {
+  public post = async <TData>(options: StateLessApiOptions, data: string): Promise<TData> => {
     let response: TData | null = null;
     try {
       AxiosClient.defaults.headers.common['Authorization'] = `bearer ${this._token}`;

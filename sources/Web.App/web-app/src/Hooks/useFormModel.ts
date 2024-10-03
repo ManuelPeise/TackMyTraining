@@ -1,7 +1,7 @@
 import React from 'react';
 import { Partial } from 'src/customTypes';
 import { FormEntry, FormEntryDictionary, FormEntrySettings, FormModelReturnType } from 'src/form';
-import { getSinglePropertySetter, formReducer, differsFromPrev } from 'src/Lib/utils';
+import { getSinglePropertySetter, formReducer, isNotEqualToPrev } from 'src/Lib/utils';
 
 type FormValidation<TValue> = {
   value: TValue;
@@ -74,7 +74,7 @@ export const useFormModel = <TModel, TValue>(
     const keys = Object.keys(state) as Array<keyof TModel>;
 
     const modified = keys.map((key) => {
-      if (differsFromPrev(state[key], initialState[key])) {
+      if (isNotEqualToPrev(state[key], initialState[key])) {
         return true;
       }
       return false;

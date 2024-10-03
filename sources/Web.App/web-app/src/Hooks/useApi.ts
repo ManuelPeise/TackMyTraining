@@ -32,6 +32,10 @@ export const serviceUrls = {
     statisticData: 'HealthData/GetStatisticData',
     dataImport: 'HealthDataImport/Import',
   },
+  dashBoard: {
+    getDashboardConfiguration: 'Dashboard/LoadDashboardSettings',
+    updateDashboardConfiguration: 'Dashboard/UpdateDashboardSettings',
+  },
   // test: 'Test/Tester',
 };
 
@@ -83,7 +87,7 @@ export const useApi = <T>(apiOptions: ApiRequestOptions, force?: boolean, isPubl
   );
 
   const post = React.useCallback(
-    async (options: ApiRequestOptions, data?: any): Promise<T | null> => {
+    async (options: ApiRequestOptions, data?: string): Promise<T | null> => {
       if (!isPublic) {
         AxiosClient.defaults.headers.common['Authorization'] = `bearer ${item.jwtToken}`;
       }

@@ -1,9 +1,9 @@
-import { Box, IconButton, Paper, Toolbar, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, Paper, Toolbar, Tooltip, Typography, useTheme } from '@mui/material';
 import React, { PropsWithChildren } from 'react';
 import { useI18n } from 'src/Hooks/useI18n';
 import { MoreVert } from '@mui/icons-material';
 import { toCaption } from 'src/Lib/utils';
-import { colors } from 'src/Lib/colors';
+import { tokens } from 'src/Lib/theme';
 
 interface IProps extends PropsWithChildren {
   resourceKey: string;
@@ -14,14 +14,16 @@ interface IProps extends PropsWithChildren {
 const PageToolbar: React.FC<IProps> = (props) => {
   const { resourceKey, toolTip, children, onAction } = props;
   const { getResource } = useI18n();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   return (
     <Paper elevation={4} sx={{ width: '100%', padding: 2 }}>
       <Toolbar>
         <Typography
           component="div"
-          variant="h5"
-          sx={{ color: colors.text.captionBlue, flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+          variant="h2"
+          sx={{ color: colors.gray[100], flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
         >
           {toCaption(getResource(`common:${resourceKey}`))}
         </Typography>

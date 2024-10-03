@@ -1,5 +1,7 @@
 ﻿using BusinessLogic.Shared.Interfaces;
 using Data.Models.Entities;
+using Data.Models.Enums;
+using Newtonsoft.Json;
 using System;
 
 namespace BusinessLogic.Shared
@@ -9,7 +11,7 @@ namespace BusinessLogic.Shared
         private readonly ClaimsAccessor _claimsAccessor;
         private readonly AppUser _currentUser;
         private readonly IApplicationUnitOfWork _unitOfWork;
-        
+
         public IApplicationUnitOfWork UnitOfWork => _unitOfWork;
         public AppUser CurrentUser => _currentUser;
 
@@ -27,7 +29,28 @@ namespace BusinessLogic.Shared
 
             await _unitOfWork.SaveChanges();
         }
-       
+
+        public async Task<UserSettings?> LoadUserSettings(int userId, SettingsTypeEnum settingsType)
+        {
+            var settingsEntities = await _unitOfWork.UserSettingsRepository.GetAllAsyncBy(x => x.UserId == userId && x.SettingsType == settingsType);
+
+            if (!settingsEntities.Any() || settingsEntities.Count > 1)
+            {
+                return null;
+            }
+
+            var selectedEntity = settingsEntities.First();
+
+            return selectedEntity;
+        }
+
+        public async Task SaveUserSettings(UserSettings settings)
+        {
+            await _unitOfWork.UserSettingsRepository.Update(settings);
+
+            await _unitOfWork.SaveChanges();
+        }
+
         private AppUser LoadCurrentUserFromClaims()
         {
             return new AppUser
