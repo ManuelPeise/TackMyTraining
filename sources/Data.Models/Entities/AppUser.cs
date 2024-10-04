@@ -14,7 +14,7 @@ namespace Data.Models.Entities
         public bool IsActive { get; set; }
         public int CrendentialsId { get; set; }
         [ForeignKey(nameof(CrendentialsId))]
-        public UserCredentials Credentials { get; set; } = new UserCredentials();
+        public UserCredentials? Credentials { get; set; }
 
     }
 }

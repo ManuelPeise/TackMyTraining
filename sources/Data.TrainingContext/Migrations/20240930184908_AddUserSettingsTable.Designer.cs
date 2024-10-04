@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.TrainingContext.Migrations
 {
     [DbContext(typeof(TrainingDbContext))]
-    [Migration("20240921215808_InitializeDatabase")]
-    partial class InitializeDatabase
+    [Migration("20240930184908_AddUserSettingsTable")]
+    partial class AddUserSettingsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,6 +70,22 @@ namespace Data.TrainingContext.Migrations
                     b.HasIndex("CrendentialsId");
 
                     b.ToTable("AppUser");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "2024-09-30",
+                            CreatedBy = "System",
+                            CrendentialsId = 1,
+                            DateOfBirth = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "test@training.com",
+                            FirstName = "",
+                            IsActive = true,
+                            LastName = "",
+                            UpdatedAt = "2024-09-30",
+                            UpdatedBy = "System"
+                        });
                 });
 
             modelBuilder.Entity("Data.Models.Entities.LogMessage", b =>
@@ -131,7 +147,15 @@ namespace Data.TrainingContext.Migrations
                     b.Property<int>("FailedLoginAttemts")
                         .HasColumnType("int");
 
+                    b.Property<string>("JwT")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RefreshToken")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -150,6 +174,113 @@ namespace Data.TrainingContext.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppUserCredentials");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = "2024-09-30",
+                            CreatedBy = "System",
+                            FailedLoginAttemts = 0,
+                            JwT = "",
+                            Password = "U3VwZXJTZWNyZXRmMTEwYmFlMC1kMGQ5LTRkZGUtODY5Ni1jNWViZWQyNWRkNDM=",
+                            RefreshToken = "",
+                            Salt = "f110bae0-d0d9-4dde-8696-c5ebed25dd43",
+                            UpdatedAt = "2024-09-30",
+                            UpdatedBy = "System"
+                        });
+                });
+
+            modelBuilder.Entity("Data.Models.Entities.UserHealthData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("BodyFat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("BodyMassIndex")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal?>("HeartBeat")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Height")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("MuscleMass")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HealthDatas");
+                });
+
+            modelBuilder.Entity("Data.Models.Entities.UserSettings", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SettingsJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SettingsName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("SettingsType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserSettings");
                 });
 
             modelBuilder.Entity("Data.Models.Entities.AppUser", b =>

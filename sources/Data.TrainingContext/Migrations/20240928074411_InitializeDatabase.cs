@@ -23,6 +23,8 @@ namespace Data.TrainingContext.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Password = table.Column<string>(type: "longtext", nullable: false),
                     Salt = table.Column<string>(type: "longtext", nullable: false),
+                    JwT = table.Column<string>(type: "longtext", nullable: false),
+                    RefreshToken = table.Column<string>(type: "longtext", nullable: false),
                     FailedLoginAttemts = table.Column<int>(type: "int", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<string>(type: "longtext", nullable: false),
@@ -32,6 +34,31 @@ namespace Data.TrainingContext.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppUserCredentials", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "HealthDatas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Height = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Weight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    BodyFat = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    MuscleMass = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    HeartBeat = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    BodyMassIndex = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    CreatedBy = table.Column<string>(type: "longtext", nullable: false),
+                    CreatedAt = table.Column<string>(type: "longtext", nullable: false),
+                    UpdatedBy = table.Column<string>(type: "longtext", nullable: false),
+                    UpdatedAt = table.Column<string>(type: "longtext", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HealthDatas", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -85,6 +112,16 @@ namespace Data.TrainingContext.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
+            migrationBuilder.InsertData(
+                table: "AppUserCredentials",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "FailedLoginAttemts", "JwT", "Password", "RefreshToken", "Salt", "UpdatedAt", "UpdatedBy" },
+                values: new object[] { 1, "2024-09-28", "System", 0, "", "U3VwZXJTZWNyZXQ3OTcwOWNkMC1jZmY4LTRhZmUtOGMzMi04MWFjOWYyNWJiZjU=", "", "79709cd0-cff8-4afe-8c32-81ac9f25bbf5", "2024-09-28", "System" });
+
+            migrationBuilder.InsertData(
+                table: "AppUser",
+                columns: new[] { "Id", "CreatedAt", "CreatedBy", "CrendentialsId", "DateOfBirth", "Email", "FirstName", "IsActive", "LastName", "UpdatedAt", "UpdatedBy" },
+                values: new object[] { 1, "2024-09-28", "System", 1, new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "test@training.com", "", true, "", "2024-09-28", "System" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AppUser_CrendentialsId",
                 table: "AppUser",
@@ -96,6 +133,9 @@ namespace Data.TrainingContext.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AppUser");
+
+            migrationBuilder.DropTable(
+                name: "HealthDatas");
 
             migrationBuilder.DropTable(
                 name: "MessageLog");

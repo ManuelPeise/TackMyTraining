@@ -1,10 +1,11 @@
 ﻿using BusinessLogic.Shared.Interfaces;
+using Data.Models.Export;
 using Data.Models.Import;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Service.Api.Administration
 {
-    public class UserRegistrationController: ApiControllerBase
+    public class UserRegistrationController : ApiControllerBase
     {
         private readonly IUserRegistrationService _registrationService;
         public UserRegistrationController(IUserRegistrationService registrationService)
@@ -13,9 +14,9 @@ namespace Service.Api.Administration
         }
 
         [HttpPost(Name = "RegisterUser")]
-        public async Task<bool> RegisterUser(UserRegistration userRegistration)
+        public async Task<RegistrationResult> RegisterUser(UserRegistration userRegistration)
         {
-            return await _registrationService.RegisterUser(userRegistration);
+            return new RegistrationResult { Success = await _registrationService.RegisterUser(userRegistration) };
         }
     }
 }
