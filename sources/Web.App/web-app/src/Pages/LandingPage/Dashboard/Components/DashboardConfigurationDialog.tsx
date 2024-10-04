@@ -1,82 +1,80 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, Typography } from '@mui/material';
+import {
+  Box,
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  FormControlLabel,
+  Grid2,
+  Typography,
+} from '@mui/material';
 import React from 'react';
-import SaveCancelButtons from 'src/Components/Input/Form/SaveCancelButtons';
 import { useI18n } from 'src/Hooks/useI18n';
 import { colors, fontsStyles } from 'src/Lib/colors';
-import { isNotEqualToPrev, toCaption } from 'src/Lib/utils';
-import { DashboardTile, DashboardTileConfiguration, DashboardTileData } from '../types';
+import { toCaption } from 'src/Lib/utils';
+import { DashboardTile } from '../types';
+import SaveCancelButtons from 'src/Components/Input/Form/SaveCancelButtons';
 import { DashboardTileEnum } from '../Enums/DashboardTileEnum';
-import DashboardConfigurationItem from './DashboardConfigurationItem';
 
 interface IProps {
   open: boolean;
   availableTiles: DashboardTile[];
-  configuration: DashboardTileData[];
   setDialogOpen: (open: boolean) => void;
-  onAction: (state: DashboardTileConfiguration[]) => Promise<void>;
+  onAction: (state: DashboardTile[]) => Promise<void>;
 }
 
 const DashboardConfigurationDialog: React.FC<IProps> = (props) => {
-  const { open, availableTiles, configuration, onAction, setDialogOpen } = props;
+  const { open, availableTiles, setDialogOpen, onAction } = props;
   const { getResource } = useI18n();
-  const originalState = React.useRef(configuration);
 
-  const [state, setState] = React.useState<DashboardTileData[]>(configuration);
+  const [tiles, setTiles] = React.useState([...availableTiles]);
 
-  const intermediateConfiguration = React.useMemo(() => {
-    const tiles: DashboardTileConfiguration[] = availableTiles.map((tile) => {
-      const config = state.find((x) => x.dashboardTileConfiguration.key === tile.key) ?? null;
-
-      if (config != null) {
-        return config.dashboardTileConfiguration;
+  const getCategoryLabel = React.useCallback(
+    (key: DashboardTileEnum) => {
+      const labelBase = getResource('common:labelShowCategory');
+      switch (key) {
+        case DashboardTileEnum.Health:
+          return labelBase.replace('{category}', getResource('common:labelDashboardTileHealth'));
+        default:
+          return '';
       }
-
-      return tile.configuration;
-    });
-
-    return tiles;
-  }, [availableTiles, state]);
-
-  const onTileConfigurationChanged = React.useCallback(
-    (key: DashboardTileEnum, checked: boolean) => {
-      const config = [...state];
-      if (!config.length || !config.some((x) => x.dashboardTileConfiguration.key === key)) {
-        config.push({
-          dashboardTileConfiguration: {
-            key: key,
-            labelKey: availableTiles.find((x) => x.key === key).labelKey,
-            isActive: checked,
-            position: state.length,
-          },
-          data: {},
-        });
-      } else {
-        config.find((x) => x.dashboardTileConfiguration.key === key).dashboardTileConfiguration.isActive = checked;
-      }
-
-      setState(config);
     },
-    [availableTiles, state]
+    [getResource]
   );
 
-  console.log(state);
-  const handleCancelClicked = React.useCallback(() => {
-    setState(originalState.current);
-    setDialogOpen(false);
-  }, [originalState, setDialogOpen]);
+  const handleCategoryStateChanged = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+      const update = tiles.map((cnf) => {
+        if (parseInt(cnf.key.toString()) === parseInt(e.currentTarget.id as string)) {
+          return { ...cnf, isActive: checked };
+        }
 
-  const handleSaveClicked = React.useCallback(async () => {
-    await onAction(
-      state.map((x) => {
-        return x.dashboardTileConfiguration;
-      })
-    );
+        return cnf;
+      });
+
+      setTiles(update);
+    },
+    [tiles]
+  );
+
+  const handleAction = React.useCallback(() => {
+    onAction(tiles);
+  }, [tiles, onAction]);
+
+  const handleCancel = React.useCallback(() => {
+    setTiles(availableTiles);
     setDialogOpen(false);
-  }, [state, setDialogOpen, onAction]);
+  }, [availableTiles, setDialogOpen]);
 
   const isModified = React.useMemo(() => {
-    return isNotEqualToPrev(originalState.current, state);
-  }, [state]);
+    const modified = tiles.map((tile, index) => {
+      return tile.isActive === availableTiles[index].isActive;
+    });
+
+    return modified.some((x) => !x);
+  }, [tiles, availableTiles]);
 
   return (
     <Dialog open={open} fullWidth>
@@ -95,17 +93,32 @@ const DashboardConfigurationDialog: React.FC<IProps> = (props) => {
       </DialogTitle>
       <Divider />
       <DialogContent>
-        {intermediateConfiguration.map((config, index) => {
+        {tiles.map((tile) => {
           return (
-            <DashboardConfigurationItem
-              key={config.key}
-              index={index}
-              id={config.key.toString()}
-              labelKey={config.labelKey}
-              isChecked={config.isActive ?? false}
-              hasDivider={index < intermediateConfiguration.length - 1}
-              onTileConfigurationChanged={onTileConfigurationChanged}
-            />
+            <Grid2
+              key={tile.key}
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              container
+              size={12}
+            >
+              <Box width="50%">
+                <FormControlLabel
+                  label={getCategoryLabel(tile.key)}
+                  control={
+                    <Checkbox
+                      id={tile.key.toString()}
+                      color="secondary"
+                      checked={tile.isActive}
+                      onChange={handleCategoryStateChanged}
+                    />
+                  }
+                />
+              </Box>
+              {}
+              <Divider variant="fullWidth" />
+            </Grid2>
           );
         })}
       </DialogContent>
@@ -113,10 +126,10 @@ const DashboardConfigurationDialog: React.FC<IProps> = (props) => {
       <DialogActions>
         <SaveCancelButtons
           actionLabel={getResource('common:labelSave')}
-          onAction={handleSaveClicked}
+          onAction={handleAction}
           cancelLabel={getResource('common:labelCancel')}
-          cancelAction={handleCancelClicked}
-          cancelDisabled={!isModified}
+          cancelAction={handleCancel}
+          cancelDisabled={false}
           saveDisabled={!isModified}
         />
       </DialogActions>

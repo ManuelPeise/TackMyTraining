@@ -13,10 +13,14 @@ export type DashboardTileConfiguration = {
   isActive: boolean;
 };
 
-export type DashboardTile = {
+export type DashboardTile<T = HealthData> = {
   key: DashboardTileEnum;
+  row: number;
+  column: number;
   labelKey: string;
-  configuration: DashboardTileConfiguration;
+  isActive: boolean;
+  data: T;
+  statistics?: T[];
 };
 
 export type DashboardConfiguration = {

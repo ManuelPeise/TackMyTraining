@@ -13,7 +13,7 @@ export type DashboardTileConfiguration = {
 };
 
 export type HealthData = {
-  date: moment.Moment;
+  date: string;
   height: number;
   weight: number;
   heartBeat: number;

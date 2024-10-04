@@ -38,7 +38,7 @@ export const AuthContextProvider: React.FC<IAuthContextProps> = (props) => {
           loginStorage.setStorageItem({ email: '', password: '', remember: false } as Login);
         }
 
-        navigate('/');
+        navigate('/dashboard');
       } else {
       }
     },

@@ -106,6 +106,7 @@ const FormCheckBox: React.FC<IProps> = (props) => {
             required={required}
             disabled={disabled}
             checked={value as boolean}
+            color="secondary"
             onChange={handleChange}
           />
         }

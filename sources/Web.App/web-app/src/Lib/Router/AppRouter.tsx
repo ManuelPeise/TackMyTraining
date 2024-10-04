@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import PrivateAppRoute from './PrivateAppRoute';
-import LandingPage from 'src/Pages/LandingPage/LandingPage';
 import { AuthContextProvider } from '../Context/AuthContext';
 import LoginPage from 'src/Pages/Auth/LoginPage';
 import RegisterPage from 'src/Pages/Auth/RegisterPage';
@@ -11,13 +10,14 @@ import HealthDataPage from 'src/Pages/HealthDataMonitor/HealthDataPage';
 import DashboardInitializationContainer from 'src/Pages/LandingPage/Dashboard/Dashboard';
 import { ColorModeContext, useMode } from '../theme';
 import { CssBaseline, ThemeProvider } from '@mui/material';
+import PublicRoute from './PublicRoute';
 // import 'src/index.css';
 
 const AppRouter: React.FC = () => {
   const { theme, colorMode } = useMode();
 
   const [filterText, setFilterText] = React.useState<string>('');
-  const [currentRoute, setCurrentRoute] = React.useState('dashboard');
+  const [currentRoute, setCurrentRoute] = React.useState('');
 
   const handleChangeRoute = React.useCallback((route: string) => {
     setCurrentRoute(route);
@@ -36,9 +36,10 @@ const AppRouter: React.FC = () => {
             <AppToolBar filterText={filterText} onSearch={onFilterTextChanged} />
             <main className="content">
               <Routes>
-                <Route path="" Component={LandingPage} />
-                <Route path="/login" Component={LoginPage} />
-                <Route path="/register" Component={RegisterPage} />
+                <Route path="/" element={<PublicRoute />}>
+                  <Route path="/" Component={LoginPage} />
+                  <Route path="/register" Component={RegisterPage} />
+                </Route>
                 {/* private routes */}
                 <Route
                   path="/"

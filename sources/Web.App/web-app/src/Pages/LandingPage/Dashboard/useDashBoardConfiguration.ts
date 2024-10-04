@@ -1,27 +1,23 @@
 import React from 'react';
-import { DashboardConfiguration, DashboardTileConfiguration, DashboardTileData } from './types';
+import { DashboardTile } from './types';
 import { StatelessApi } from 'src/Lib/Api/StatelessApi';
 import { serviceUrls } from 'src/Hooks/useApi';
 
-export const useDashBoardConfiguration = (
-  configuration: DashboardTileData[],
-  api: StatelessApi<DashboardConfiguration>
-) => {
+export const useDashBoardConfiguration = (dashboardTiles: DashboardTile[], api: StatelessApi<DashboardTile[]>) => {
   const [configurationDialogOpen, setConfigurationDialogOpen] = React.useState<boolean>(false);
 
-  const handleSortDashboardTiles = React.useCallback((a: DashboardTileData, b: DashboardTileData) => {
-    return a.dashboardTileConfiguration.position > b.dashboardTileConfiguration.position ? -1 : 1;
-  }, []);
-
   const onAction = React.useCallback(
-    async (state: DashboardTileConfiguration[]) => {
+    async (state: DashboardTile[]) => {
       await api.post({ serviceUrl: serviceUrls.dashBoard.updateDashboardConfiguration }, JSON.stringify(state));
       await api.get();
-      setConfigurationDialogOpen(false);
+      // setConfigurationDialogOpen(false);
     },
     [api]
   );
 
+  const activeTiles = React.useMemo(() => {
+    return dashboardTiles.filter((x) => x.isActive);
+  }, [dashboardTiles]);
   //#region  drag and drop
 
   // const onDragOver = React.useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -45,9 +41,8 @@ export const useDashBoardConfiguration = (
 
   return {
     configurationDialogOpen: configurationDialogOpen,
-    dashboardConfiguration: configuration
-      .filter((x) => x.dashboardTileConfiguration.isActive)
-      .sort(handleSortDashboardTiles),
+    activeTiles: activeTiles,
+    allTiles: dashboardTiles,
     setDialogOpen: setConfigurationDialogOpen,
     onAction: onAction,
   };

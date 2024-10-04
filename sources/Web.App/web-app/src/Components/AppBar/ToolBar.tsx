@@ -1,9 +1,10 @@
 import { Box, Button, IconButton, InputBase, Typography, useTheme } from '@mui/material';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useAuthentication } from 'src/Hooks/useAuthentication';
-import { ColorModeContext, tokens } from 'src/Lib/theme';
-import { DarkModeOutlined, LightModeOutlined, Search, AccountCircle, Delete } from '@mui/icons-material';
+import { tokens } from 'src/Lib/theme';
+import { Search, AccountCircle, Delete } from '@mui/icons-material';
 import { useI18n } from 'src/Hooks/useI18n';
+import { Link, useLocation } from 'react-router-dom';
 
 interface IToolbarBarProps {
   hasSearchBar?: boolean;
@@ -16,8 +17,9 @@ const AppToolBar: React.FC<IToolbarBarProps> = (props) => {
   const { isAuthenticated, userData, onLogout } = useAuthentication();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const colorMode = useContext(ColorModeContext);
   const { getResource } = useI18n();
+  const currentLocation = useLocation();
+
   const onFilter = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onSearch(e.currentTarget.value);
@@ -38,10 +40,10 @@ const AppToolBar: React.FC<IToolbarBarProps> = (props) => {
         )}
       </Box>
       <Box display="flex">
-        <IconButton onClick={colorMode.toggleColorMode}>
+        {/* <IconButton onClick={colorMode.toggleColorMode}>
           {theme.palette.mode === 'light' ? <DarkModeOutlined /> : <LightModeOutlined />}
-        </IconButton>
-        {isAuthenticated && (
+        </IconButton> */}
+        {isAuthenticated ? (
           <Box display="flex">
             <IconButton>
               <AccountCircle />
@@ -59,6 +61,25 @@ const AppToolBar: React.FC<IToolbarBarProps> = (props) => {
               <Button sx={{ color: '#329ea8' }} onClick={onLogout}>
                 Logout
               </Button>
+            </Box>
+          </Box>
+        ) : (
+          <Box display="flex">
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+              {currentLocation.pathname === '/register' && (
+                <Link to="/">
+                  <Button sx={{ color: colors.gray[400] }} onClick={onLogout}>
+                    {getResource('common:labelLogin')}
+                  </Button>
+                </Link>
+              )}
+              {currentLocation.pathname === '/' && (
+                <Link to="/register">
+                  <Button sx={{ color: colors.gray[400] }} onClick={onLogout}>
+                    {getResource('common:labelRegister')}
+                  </Button>
+                </Link>
+              )}
             </Box>
           </Box>
         )}

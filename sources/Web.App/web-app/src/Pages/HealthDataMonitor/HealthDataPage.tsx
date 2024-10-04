@@ -1,4 +1,4 @@
-import { Grid2, Paper } from '@mui/material';
+import { Grid2, Paper, useTheme } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 import PageToolbar from 'src/Components/AppBar/PageToolBar';
@@ -18,8 +18,8 @@ import { IJwtData } from 'src/Lib/Interfaces/IUserData';
 import { dateFormats } from 'src/Lib/constants';
 import CustomChart from 'src/Components/Charts/CustomChart';
 import { ChartConfigurationProps, useChart } from 'src/Hooks/useChart';
-import { colors } from 'src/Lib/colors';
 import { useStatefulApi } from 'src/Hooks/useStateFulApi';
+import { tokens } from 'src/Lib/theme';
 
 interface IHealthDataPageProps {
   healthData: HealthData;
@@ -59,7 +59,7 @@ const initializeAsync = async (range: TimeRange, token: string): Promise<IHealth
   let [healthDataset] = await Promise.all([healthDatasetApi.get()]);
 
   const saveHealthDataCallback = async (dataset: HealthData): Promise<boolean> => {
-    return await healthDatasetApi.post<boolean>({ serviceUrl: serviceUrls.health.dataImport }, dataset);
+    return await healthDatasetApi.post<boolean>({ serviceUrl: serviceUrls.health.dataImport }, JSON.stringify(dataset));
   };
 
   return {
@@ -75,7 +75,8 @@ const HealthDataPage: React.FC = () => {
   const { getResource } = useI18n();
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const dialogRef = React.useRef<HTMLDivElement | null>();
-
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const tokenStorage = useLocalStorage<IJwtData>(LocalStorageKeyEnum.JwtData);
 
   const healthDataForm = useFormModel<HealthPageData, TValue>(initialData, [
@@ -144,7 +145,7 @@ const HealthDataPage: React.FC = () => {
           title: {
             display: true,
             text: getResource('common:labelChartBottom'),
-            color: colors.text.dialogCaption,
+            color: colors.primary[400],
             font: {
               family: 'Serif',
               size: 20,
@@ -158,7 +159,7 @@ const HealthDataPage: React.FC = () => {
           title: {
             display: true,
             text: getResource('common:labelChartValue'),
-            color: colors.text.dialogCaption,
+            color: colors.primary[400],
             font: {
               family: 'Sans-serif',
               size: 20,
@@ -210,21 +211,7 @@ const HealthDataPage: React.FC = () => {
   }
 
   return (
-    <Grid2
-      sx={{
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        backgroundColor: '#f2f2f2',
-        padding: 2,
-      }}
-      rowSpacing={10}
-      justifyContent="flex-start"
-      alignItems="flex-start"
-      alignContent="flex-start"
-      direction="column"
-      container
-    >
+    <Grid2 display="flex" flexDirection="column" container rowSpacing={12} width="100%" height="100%">
       <Grid2 container sx={{ width: '100%' }}>
         <PageToolbar
           resourceKey="captionHealthMonitoring"

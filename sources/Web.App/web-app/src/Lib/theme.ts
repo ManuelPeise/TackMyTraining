@@ -4,6 +4,28 @@ import { createTheme } from '@mui/material';
 export const tokens = (mode: 'light' | 'dark') => ({
   ...(mode === 'dark'
     ? {
+        red: {
+          100: '#ffcccc',
+          200: '#ff9999',
+          300: '#ff6666',
+          400: '#ff3333',
+          500: '#ff0000',
+          600: '#cc0000',
+          700: '#990000',
+          800: '#660000',
+          900: '#330000',
+        },
+        yellow: {
+          100: '#ffffcc',
+          200: '#ffff99',
+          300: '#ffff66',
+          400: '#ffff33',
+          500: '#ffff00',
+          600: '#cccc00',
+          700: '#999900',
+          800: '#666600',
+          900: '#333300',
+        },
         gray: {
           100: '#e0e0e0',
           200: '#c2c2c2',
@@ -58,9 +80,40 @@ export const tokens = (mode: 'light' | 'dark') => ({
           700: '#3e4396',
           800: '#2a2d64',
           900: '#151632',
+        },
+        chartColors: {
+          red: '#ff0000',
+          blue: '#0000ff',
+          green: '#009900',
+          purple: '#ff33cc',
+          yellow: '#ffff00',
+          orange: '#ff9933',
+          light: '#d9d9d9',
         },
       }
     : {
+        red: {
+          900: '#330000',
+          800: '#660000',
+          700: '#990000',
+          600: '#cc0000',
+          500: '#ff0000',
+          400: '#ff3333',
+          300: '#ff6666',
+          200: '#ff9999',
+          100: '#ffcccc',
+        },
+        yellow: {
+          900: '#333300',
+          800: '#666600',
+          700: '#999900',
+          600: '#cccc00',
+          500: '#ffff00',
+          400: '#ffff33',
+          300: '#ffff66',
+          200: '#ffff99',
+          100: '#ffffcc',
+        },
         gray: {
           900: '#141414',
           800: '#292929',
@@ -115,6 +168,15 @@ export const tokens = (mode: 'light' | 'dark') => ({
           300: '#a4a9fc',
           200: '#c3c6fd',
           100: '#e1e2fe',
+        },
+        chartColors: {
+          red: '#ff0000',
+          blue: '#0000ff',
+          green: '#009900',
+          purple: '#ff33cc',
+          yellow: '#ffff00',
+          orange: '#ff9933',
+          light: '#d9d9d9',
         },
       }),
 });

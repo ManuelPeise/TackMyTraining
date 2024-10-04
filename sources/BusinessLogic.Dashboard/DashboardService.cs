@@ -3,8 +3,8 @@ using BusinessLogic.Shared.Interfaces;
 using Data.Models.Entities;
 using Data.Models.Enums;
 using Data.Models.Export;
+using Data.Models.RequestModels;
 using Newtonsoft.Json;
-using System;
 
 namespace BusinessLogic.Dashboard
 {
@@ -13,6 +13,17 @@ namespace BusinessLogic.Dashboard
         private readonly IApplicationUnitOfWork _applicationUnitOfWork;
         private readonly IHealthModule _healthModule;
 
+        private readonly Dictionary<DashboardTileEnum, DashboardTile> _dashBoardTileMapping = new Dictionary<DashboardTileEnum, DashboardTile>
+        {
+            {DashboardTileEnum.Health, new DashboardTile {
+                 Key = DashboardTileEnum.Health,
+                 LabelKey = "labelDashboardTileHealth",
+                 Row = 1,
+                 Column = 1,
+                }
+            },
+        };
+
         public DashboardService(IApplicationUnitOfWork applicationUnitOfWork, IHealthModule healthModule) : base(applicationUnitOfWork)
         {
             _applicationUnitOfWork = applicationUnitOfWork;
@@ -20,11 +31,9 @@ namespace BusinessLogic.Dashboard
 
         }
 
-        public async Task<DashboardConfiguration> LoadDashboardSettings()
+        public async Task<List<DashboardTile>> LoadDashboardTiles()
         {
             var availableTiles = GetAvailableTiles();
-
-            var exportModelCollection = new List<DashboardTileData>();
 
             try
             {
@@ -32,42 +41,46 @@ namespace BusinessLogic.Dashboard
 
                 if (settings == null)
                 {
-                    return new DashboardConfiguration
-                    {
-                        AvailableTiles = availableTiles,
-                        DashboardTileData = exportModelCollection
-                    };
+                    return new List<DashboardTile>();
                 }
 
-                var configurations = JsonConvert.DeserializeObject<List<DashboardTileConfiguration>>(settings.SettingsJson);
+                var configuredTiles = JsonConvert.DeserializeObject<List<DashboardTile>>(settings.SettingsJson) ?? new List<DashboardTile>();
 
-                if (configurations == null)
+                var exportTiles = new List<DashboardTile>();
+
+                foreach (var tile in availableTiles)
                 {
-                    return new DashboardConfiguration
+                    var configuredTile = configuredTiles.FirstOrDefault(x => x.Key == tile.Key);
+
+                    if (configuredTile == null)
                     {
-                        AvailableTiles = availableTiles,
-                        DashboardTileData = exportModelCollection
-                    };
+                        exportTiles.Add(tile);
+
+                        continue;
+                    }
+
+                    tile.IsActive = configuredTile.IsActive;
+
+                    if (configuredTile.Row > 0)
+                    {
+                        tile.Row = configuredTile.Row;
+                    }
+
+                    if (configuredTile.Column > 0)
+                    {
+                        tile.Column = configuredTile.Column;
+                    }
+
+                    var actualData = await GetDashboardTileData(DataTypeEnum.Actual);
+                    var statisticData = await GetDashboardTileData(DataTypeEnum.Statistic, -6);
+
+                    tile.Data = actualData?.FirstOrDefault();
+                    tile.Statistics = statisticData;
+
+                    exportTiles.Add(tile);
                 }
 
-                foreach (var configuration in configurations)
-                {
-                    var tileData = await GetDashboardTileData(configuration.Key);
-
-                    var exportModel = new DashboardTileData
-                    {
-                        DashboardTileConfiguration = configuration,
-                        Data = tileData
-                    };
-
-                    exportModelCollection.Add(exportModel);
-                }
-
-                return new DashboardConfiguration
-                {
-                    AvailableTiles = availableTiles,
-                    DashboardTileData = exportModelCollection
-                };
+                return exportTiles;
             }
             catch (Exception exception)
             {
@@ -81,15 +94,11 @@ namespace BusinessLogic.Dashboard
 
                 await UnitOfWork.SaveChanges();
 
-                return new DashboardConfiguration
-                {
-                    AvailableTiles = availableTiles,
-                    DashboardTileData = new List<DashboardTileData>()
-                };
+                return new List<DashboardTile>();
             }
         }
 
-        public async Task UpdateDashboardConfiguration(List<DashboardTileConfiguration> dashboardConfigurations)
+        public async Task UpdateDashboardConfiguration(List<DashboardTile> tiles)
         {
             try
             {
@@ -102,7 +111,7 @@ namespace BusinessLogic.Dashboard
                         SettingsType = DashboardSettings.SettingsType,
                         SettingsName = DashboardSettings.Name,
                         UserId = CurrentUser.Id,
-                        SettingsJson = JsonConvert.SerializeObject(dashboardConfigurations)
+                        SettingsJson = JsonConvert.SerializeObject(tiles)
                     };
 
                     await UnitOfWork.UserSettingsRepository.AddAsync(settings);
@@ -112,25 +121,26 @@ namespace BusinessLogic.Dashboard
                     return;
                 }
 
-                var configurations = JsonConvert.DeserializeObject<List<DashboardTileConfiguration>>(settings.SettingsJson);
+                var configurations = JsonConvert.DeserializeObject<List<DashboardTile>>(settings.SettingsJson);
 
-                var updatedConfigurations = new List<DashboardTileConfiguration>();
+                var updatedConfigurations = new List<DashboardTile>();
 
-                foreach (var configuration in dashboardConfigurations)
+                foreach (var tile in tiles)
                 {
-                    var config = dashboardConfigurations.FirstOrDefault(x => x.Key == configuration.Key);
+                    var config = tiles.FirstOrDefault(x => x.Key == tile.Key);
 
                     if (config != null)
                     {
-                        config.IsActive = configuration.IsActive;
-                        config.Position = configuration.Position;
+                        config.IsActive = tile.IsActive;
+                        config.Row = tile.Row;
+                        config.Column = tile.Column;
 
                         updatedConfigurations.Add(config);
 
                         continue;
                     }
 
-                    updatedConfigurations.Add(configuration);
+                    updatedConfigurations.Add(tile);
                 }
 
                 settings.SettingsJson = JsonConvert.SerializeObject(updatedConfigurations);
@@ -156,39 +166,42 @@ namespace BusinessLogic.Dashboard
 
         #region private members
 
-        private async Task<object?> GetDashboardTileData(DashboardTileEnum key)
+        private async Task<List<object>?> GetDashboardTileData(DataTypeEnum type, int offSet = 0)
         {
-            switch (key)
+            var dataSets = new List<object>();
+
+            switch (type)
             {
-                case DashboardTileEnum.Health:
-                    return await GetLastHealthDataSet();
+                case DataTypeEnum.Actual:
+                    dataSets.Add(await _healthModule.GetLastHealthDataSet(offSet));
+                    return dataSets;
+                case DataTypeEnum.Statistic:
+                    var data = await _healthModule.LoadStatisticData(new TimeRange { From = DateTime.UtcNow.AddDays(offSet).Date, To = DateTime.UtcNow.Date });
+                    var healthData = data.Select(x => x.HealthData);
+                    dataSets.AddRange(data.Select(x => x.HealthData));
+                    return dataSets;
                 default: return null;
             }
         }
 
-        private async Task<object?> GetLastHealthDataSet()
-        {
-            return await _healthModule.GetLastHealthDataSet();
-        }
-
         private List<DashboardTile> GetAvailableTiles()
         {
-            return new List<DashboardTile>
-            {
-                new DashboardTile
-                {
-                    Key = DashboardTileEnum.Health,
-                    LabelKey = "labelDashboardTileHealth",
-                    Configuration = new DashboardTileConfiguration
-                    {
+            var tiles = new List<DashboardTile>();
 
-                         Key = DashboardTileEnum.Health,
-                         Position = 0,
-                         LabelKey = "labelDashboardTileHealth",
-                         IsActive = false,
-                    }
-                }
-            };
+            foreach (var entry in _dashBoardTileMapping)
+            {
+                tiles.Add(new DashboardTile
+                {
+                    Key = entry.Key,
+
+                    Row = entry.Value.Row,
+                    Column = entry.Value.Column,
+                    IsActive = entry.Value.IsActive,
+                    LabelKey = entry.Value.LabelKey,
+                });
+            }
+
+            return tiles;
         }
         #endregion
     }

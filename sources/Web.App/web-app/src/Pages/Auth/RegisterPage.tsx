@@ -1,4 +1,4 @@
-import { Grid2, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Grid2, List, ListItem, ListItemAvatar, ListItemText, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import FormInput from 'src/Components/Input/Form/FormInput';
 import SaveCancelButtons from 'src/Components/Input/Form/SaveCancelButtons';
@@ -9,10 +9,14 @@ import { useFormModel } from 'src/Hooks/useFormModel';
 import { useI18n } from 'src/Hooks/useI18n';
 import { DataTypeEnum } from 'src/Lib/Enums/DataTypeEnum';
 import { emailValidation, passwordValidation } from 'src/Lib/validation';
+import { HowToRegRounded } from '@mui/icons-material';
+import { tokens } from 'src/Lib/theme';
 
 const RegisterPage: React.FC = () => {
   const { getResource } = useI18n();
   const { onRegistration } = useAuthentication();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const form = useFormModel<Registration, TValue>(
     { firstName: '', lastName: '', dateOfBirth: null, email: '', password: '', confirmPassword: '' },
     [
@@ -47,10 +51,22 @@ const RegisterPage: React.FC = () => {
       <List disablePadding sx={{ width: '30%' }}>
         <ListItem style={{ display: 'flex', justifyItems: 'center', flexDirection: 'column' }}>
           <ListItemAvatar
-            style={{ height: 100, width: 100, borderRadius: '50%', backgroundColor: 'red' }}
-          ></ListItemAvatar>
-          <ListItemText style={{ textAlign: 'center', color: '#3236a8' }}>
-            <Typography variant="h6">{getResource('common:captionRegistration')}</Typography>
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 100,
+              width: 100,
+              borderRadius: '50%',
+              backgroundColor: colors.gray[100],
+            }}
+          >
+            <HowToRegRounded sx={{ height: '100%', width: '100%', color: colors.gray[500] }} />
+          </ListItemAvatar>
+          <ListItemText style={{ textAlign: 'center' }}>
+            <Typography variant="h6" color={colors.gray[600]}>
+              {getResource('common:captionRegistration')}
+            </Typography>
           </ListItemText>
         </ListItem>
         <FormInput

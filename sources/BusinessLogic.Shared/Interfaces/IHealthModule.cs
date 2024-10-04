@@ -6,7 +6,7 @@ namespace BusinessLogic.Shared.Interfaces
 {
     public interface IHealthModule
     {
-        Task<HealthDataExportModel> GetLastHealthDataSet();
+        Task<HealthDataExportModel> GetLastHealthDataSet(int offSet = 0);
         Task<List<HealthDataStatistic>> LoadStatisticData(TimeRange timeRange);
         Task<bool> ImportHealthData(HealthDataImport importModel);
     }

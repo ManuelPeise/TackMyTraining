@@ -12,14 +12,35 @@ namespace BusinessLogic.Health
     {
         public HealthModule(IApplicationUnitOfWork unitOfWork) : base(unitOfWork) { }
 
-        public async Task<HealthDataExportModel> GetLastHealthDataSet()
+        public async Task<HealthDataExportModel> GetLastHealthDataSet(int offSet = 0)
         {
             try
             {
                 var dataSets = await UnitOfWork.HealthDataRepository.GetAllAsyncBy(x => x.UserId == CurrentUser.Id);
 
-                var selectedDataSet = dataSets.FirstOrDefault(set => set.Date == dataSets.Max(s => s.Date));
+                if (!dataSets.Any() || dataSets == null)
+                {
+                    return new HealthDataExportModel
+                    {
+                        Bmi = 0,
+                        HeartBeat = 0,
+                        Weight = 0,
+                        Height = 0,
+                        BodyFat = 0,
+                        Date = DateTime.UtcNow.ToString("dd.MM.yyyy"),
+                        MuscleMass = 0,
+                    };
+                }
 
+                UserHealthData? selectedDataSet = null;
+                selectedDataSet = dataSets.FirstOrDefault(set => set.Date.Date == dataSets.Max(s => s.Date.Date));
+                
+                if (offSet != 0 && selectedDataSet != null)
+                {
+                    var index = dataSets.ToList().FindIndex(x => x.Id == selectedDataSet.Id);
+                    selectedDataSet = dataSets.ToArray()[index -1];
+                }
+                
                 if (!dataSets.Any() || selectedDataSet == null)
                 {
                     throw new Exception($"There are no datasets for [{CurrentUser.Id}] available!");
@@ -27,7 +48,7 @@ namespace BusinessLogic.Health
 
                 return new HealthDataExportModel
                 {
-                    Date = selectedDataSet.Date,
+                    Date = selectedDataSet.Date.ToString("dd.MM.yyyy"),
                     Height = selectedDataSet.Height,
                     Weight = selectedDataSet.Weight,
                     HeartBeat = selectedDataSet.HeartBeat,
@@ -118,7 +139,7 @@ namespace BusinessLogic.Health
 
         private void ValidateHealthDataImportModel(HealthDataImport importModel, out UserHealthData healthData)
         {
-            if (importModel.Date > DateTime.UtcNow || importModel.Height <= 0 || importModel.Weight <= 0)
+            if (DateTime.Parse(importModel.Date) > DateTime.UtcNow || importModel.Height <= 0 || importModel.Weight <= 0)
             {
                 throw new Exception("Found invalid import model!");
             }
@@ -126,7 +147,7 @@ namespace BusinessLogic.Health
             healthData = new UserHealthData
             {
                 UserId = CurrentUser.Id,
-                Date = importModel.Date,
+                Date = DateTime.Parse(importModel?.Date),
                 Height = importModel.Height,
                 Weight = importModel.Weight,
                 MuscleMass = GetValueOrNull(importModel.MuscleMass),
@@ -146,7 +167,7 @@ namespace BusinessLogic.Health
             var affectedDates = new List<DateTime>();
             var currentDate = timeRange.From;
 
-            while(currentDate <= timeRange.To)
+            while (currentDate <= timeRange.To)
             {
                 affectedDates.Add(currentDate);
                 currentDate = currentDate.AddDays(1);
@@ -161,7 +182,7 @@ namespace BusinessLogic.Health
 
             return new HealthDataExportModel
             {
-                Date = date,
+                Date = date.ToString("dd.MM.yyyy"),
                 Height = SaveDivide(dataSets.Sum(x => x.Height), entrieCount) ?? 0.00m,
                 Weight = SaveDivide(dataSets.Sum(x => x.Weight), entrieCount) ?? 0.00m,
                 BodyFat = SaveDivide(dataSets.Sum(x => x.BodyFat) ?? 0.00m, entrieCount),
@@ -178,24 +199,24 @@ namespace BusinessLogic.Health
 
             foreach (var date in affectedDates)
             {
-                if(healthDataByDate[date].Any())
-                {   
+                if (healthDataByDate[date].Any())
+                {
                     lastKeyWithValues = date;
                     var data = GetStatisticData(healthDataByDate[date], date);
                     statistics.Add(new HealthDataStatistic
                     {
-                        Date = date,
+                        Date = date.ToString("dd.MM.yyyy"),
                         HealthData = data,
                     });
                 }
                 else
                 {
-                    if(lastKeyWithValues != DateTime.MinValue)
+                    if (lastKeyWithValues != DateTime.MinValue)
                     {
                         var data = GetStatisticData(healthDataByDate[lastKeyWithValues], date);
                         statistics.Add(new HealthDataStatistic
                         {
-                            Date = date,
+                            Date = date.ToString("dd.MM.yyyy"),
                             HealthData = data,
                         });
                     }
@@ -203,10 +224,10 @@ namespace BusinessLogic.Health
                     {
                         statistics.Add(new HealthDataStatistic
                         {
-                            Date = date,
+                            Date = date.ToString("dd.MM.yyyy"),
                             HealthData = new HealthDataExportModel
                             {
-                                Date = date,
+                                Date = date.ToString("dd.MM.yyyy"),
                                 Weight = 0,
                                 Height = 0,
                                 BodyFat = 0,
@@ -216,7 +237,7 @@ namespace BusinessLogic.Health
                             }
                         });
                     }
-                }     
+                }
             }
 
             return statistics;

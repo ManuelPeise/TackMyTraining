@@ -33,7 +33,7 @@ export const serviceUrls = {
     dataImport: 'HealthDataImport/Import',
   },
   dashBoard: {
-    getDashboardConfiguration: 'Dashboard/LoadDashboardSettings',
+    getDashboardTiles: 'Dashboard/LoadDashboardTiles',
     updateDashboardConfiguration: 'Dashboard/UpdateDashboardSettings',
   },
   // test: 'Test/Tester',

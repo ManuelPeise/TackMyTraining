@@ -69,6 +69,12 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
         '& .ps-sidebar-root': {
           borderRight: `0px solid ${colors.primary[900]} !important`,
         },
+        '& .ps-menuitem-root .ps-menu-button:hover': {
+          backgroundColor: colors.gray[800],
+        },
+        '& .ps-disabled': {
+          cursor: `not-allowed !important`,
+        },
         height: '100%',
       }}
     >
@@ -93,7 +99,7 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
             }}
           >
             {!isCollapsed && (
-              <Box display="flex" justifyContent="space-between" alignItems="center" ml="0px">
+              <Box display="flex" justifyContent="space-between" alignItems="center" ml="0px" padding="0 10px 0 10px">
                 <Typography variant="h3" color={colors.gray[100]}>
                   Training Center
                 </Typography>

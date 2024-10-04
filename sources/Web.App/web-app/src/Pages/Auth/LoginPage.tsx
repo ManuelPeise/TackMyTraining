@@ -1,4 +1,4 @@
-import { Grid2, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Box, List, ListItem, ListItemAvatar, ListItemText, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import FormInput from 'src/Components/Input/Form/FormInput';
 import SaveCancelButtons from 'src/Components/Input/Form/SaveCancelButtons';
@@ -8,11 +8,15 @@ import { useAuthentication } from 'src/Hooks/useAuthentication';
 import { useFormModel } from 'src/Hooks/useFormModel';
 import { useI18n } from 'src/Hooks/useI18n';
 import { DataTypeEnum } from 'src/Lib/Enums/DataTypeEnum';
+import { tokens } from 'src/Lib/theme';
 import { emailValidation, passwordValidation } from 'src/Lib/validation';
+import { AccountCircleOutlined } from '@mui/icons-material';
 
 const LoginPage: React.FC = () => {
   const { login, onLogin } = useAuthentication();
   const { getResource } = useI18n();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const form = useFormModel<Login, TValue>(login, [
     { key: 'email', required: true, type: DataTypeEnum.Text, validationCallback: emailValidation },
     { key: 'password', required: true, type: DataTypeEnum.Password, validationCallback: passwordValidation },
@@ -24,8 +28,10 @@ const LoginPage: React.FC = () => {
   }, [form.state, onLogin]);
 
   return (
-    <Grid2
-      sx={{ width: '100%', height: '100vh', display: 'flex' }}
+    <Box
+      width="100%"
+      sx={{ width: '100%' }}
+      display="flex"
       justifyContent="center"
       alignItems="center"
       alignContent="center"
@@ -33,10 +39,22 @@ const LoginPage: React.FC = () => {
       <List disablePadding sx={{ width: '30%' }}>
         <ListItem style={{ display: 'flex', justifyItems: 'center', flexDirection: 'column' }}>
           <ListItemAvatar
-            style={{ height: 100, width: 100, borderRadius: '50%', backgroundColor: 'red' }}
-          ></ListItemAvatar>
-          <ListItemText style={{ textAlign: 'center', color: '#3236a8' }}>
-            <Typography variant="h6">{getResource('common:captionLogin')}</Typography>
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 100,
+              width: 100,
+              borderRadius: '50%',
+              backgroundColor: colors.gray[100],
+            }}
+          >
+            <AccountCircleOutlined sx={{ height: '100%', width: '100%', color: colors.gray[500] }} />
+          </ListItemAvatar>
+          <ListItemText style={{ textAlign: 'center' }}>
+            <Typography variant="h3" color={colors.gray[600]}>
+              {getResource('common:captionLogin')}
+            </Typography>
           </ListItemText>
         </ListItem>
         <FormInput
@@ -66,7 +84,7 @@ const LoginPage: React.FC = () => {
           onAction={handleLogin}
         />
       </List>
-    </Grid2>
+    </Box>
   );
 };
 

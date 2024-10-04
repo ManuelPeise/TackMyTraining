@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Shared.Interfaces;
+using Data.Models.Enums;
 using Data.Models.Export;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,16 +14,16 @@ namespace Service.Api.DashBoard
             _service = service;
         }
 
-        [HttpGet(Name = "LoadDashboardSettings")]
-        public async Task<DashboardConfiguration> LoadDashboardSettings()
+        [HttpGet(Name = "LoadDashboardTiles")]
+        public async Task<List<DashboardTile>> LoadDashboardTiles()
         {
-            return await _service.LoadDashboardSettings();
+            return await _service.LoadDashboardTiles();
         }
 
         [HttpPost(Name = "UpdateDashboardSettings")]
-        public async Task UpdateDashboardSettings(List<DashboardTileConfiguration> configurations)
+        public async Task UpdateDashboardSettings(List<DashboardTile> tiles)
         {
-            await _service.UpdateDashboardConfiguration(configurations);
+            await _service.UpdateDashboardConfiguration(tiles);
         }
     }
 }

@@ -27,7 +27,7 @@ const AddHealthDataDialog: React.FC<IProps> = (props) => {
 
   const initialData: HealthData = React.useMemo(() => {
     return {
-      date: moment(),
+      date: '',
       height: data.height ?? 0,
       weight: data.weight ?? 0,
       bodyFat: 0,
@@ -62,8 +62,9 @@ const AddHealthDataDialog: React.FC<IProps> = (props) => {
 
   const handleSave = React.useCallback(async () => {
     if (await onSave(form.state)) {
-      await refreshLastHealthDataSet();
-      onClose();
+      await refreshLastHealthDataSet().then(() => {
+        onClose();
+      });
     }
   }, [form, onSave, onClose, refreshLastHealthDataSet]);
 

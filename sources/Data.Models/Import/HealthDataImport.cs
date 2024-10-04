@@ -2,7 +2,7 @@
 {
     public class HealthDataImport
     {
-        public DateTime Date { get; set; }
+        public string? Date { get; set; }
         public decimal Height { get; set; }
         public decimal Weight { get; set; }
         public decimal? HeartBeat { get; set; }

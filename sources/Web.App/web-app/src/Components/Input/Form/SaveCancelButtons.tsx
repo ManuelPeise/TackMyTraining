@@ -1,6 +1,6 @@
-import { Button, Grid2, ListItem } from '@mui/material';
+import { Button, Grid2, ListItem, useTheme } from '@mui/material';
 import React, { CSSProperties } from 'react';
-import { colors } from 'src/Lib/colors';
+import { tokens } from 'src/Lib/theme';
 
 interface IProps {
   width?: string;
@@ -16,21 +16,24 @@ interface IProps {
 const SaveCancelButtons: React.FC<IProps> = (props) => {
   const { width, cancelLabel, actionLabel, cancelDisabled, saveDisabled, placement, onAction, cancelAction } = props;
 
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+
   const cancelButtonButtonStyle = React.useMemo((): CSSProperties => {
     return {
-      borderRadius: 25,
-      backgroundColor: cancelDisabled ? colors.buttons.BackgroundDisabled : colors.buttons.ActiveCancel,
-      color: cancelDisabled ? colors.buttons.FontDisabled : colors.buttons.FontActiveWhite,
+      border: `${cancelDisabled ? `1px solid ${colors.gray[400]}` : `1px solid ${colors.gray[100]}`}`,
+      backgroundColor: cancelDisabled ? colors.gray[400] : colors.gray[400],
+      color: cancelDisabled ? colors.gray[200] : colors.gray[900],
     };
-  }, [cancelDisabled]);
+  }, [cancelDisabled, colors]);
 
   const saveButtonButtonStyle = React.useMemo((): CSSProperties => {
     return {
-      borderRadius: 25,
-      backgroundColor: saveDisabled ? colors.buttons.BackgroundDisabledConfirm : colors.buttons.BackgroundActiveConfirm,
-      color: saveDisabled ? colors.buttons.FontDisabled : colors.buttons.FontActiveWhite,
+      border: `${saveDisabled ? `1px solid ${colors.gray[400]}` : `1px solid ${colors.gray[100]}`}`,
+      backgroundColor: saveDisabled ? colors.gray[400] : colors.gray[400],
+      color: saveDisabled ? colors.gray[200] : colors.gray[900],
     };
-  }, [saveDisabled]);
+  }, [saveDisabled, colors]);
 
   const handleCancel = React.useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
