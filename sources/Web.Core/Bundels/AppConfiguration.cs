@@ -3,6 +3,7 @@ using BusinessLogic.Dashboard;
 using BusinessLogic.Health;
 using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
+using BusinessLogic.Training;
 using Data.TrainingContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ namespace Web.Core.Bundels
             builder.Services.AddScoped<IUserLoginService, UserLoginService>();
             builder.Services.AddScoped<IHealthModule, HealthModule>();
             builder.Services.AddScoped<IDashboardService, DashboardService>();
+            builder.Services.AddScoped<ITrainingService, TrainingService>();
             ConfigureJwt(builder);
 
             builder.Services.AddCors(opt =>
