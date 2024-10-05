@@ -21,6 +21,7 @@ namespace BusinessLogic.Dashboard
                  Row = 1,
                  Column = 1,
                 }
+            
             },
         };
 
@@ -37,16 +38,21 @@ namespace BusinessLogic.Dashboard
 
             try
             {
+                var exportTiles = new List<DashboardTile>();
+
                 var settings = await LoadUserSettings(CurrentUser.Id, SettingsTypeEnum.DashboardConfiguration);
 
                 if (settings == null)
                 {
-                    return new List<DashboardTile>();
+                    foreach (var tile in availableTiles)
+                    {
+                        exportTiles.Add(tile);
+                    }
+                       
+                    return exportTiles;
                 }
 
                 var configuredTiles = JsonConvert.DeserializeObject<List<DashboardTile>>(settings.SettingsJson) ?? new List<DashboardTile>();
-
-                var exportTiles = new List<DashboardTile>();
 
                 foreach (var tile in availableTiles)
                 {
@@ -193,7 +199,6 @@ namespace BusinessLogic.Dashboard
                 tiles.Add(new DashboardTile
                 {
                     Key = entry.Key,
-
                     Row = entry.Value.Row,
                     Column = entry.Value.Column,
                     IsActive = entry.Value.IsActive,

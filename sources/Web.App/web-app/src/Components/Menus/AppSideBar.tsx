@@ -8,46 +8,13 @@ import {
   MenuOutlined,
   Menu as MenuIcon,
   AccountCircleOutlined,
+  FitnessCenterOutlined,
 } from '@mui/icons-material';
 import { tokens } from 'src/Lib/theme';
 import { useAuthentication } from 'src/Hooks/useAuthentication';
 import { useI18n } from 'src/Hooks/useI18n';
-import { Link } from 'react-router-dom';
-
-interface IMenuItemProps {
-  title: string;
-  to: string;
-  icon: JSX.Element;
-  selected: string;
-  setSelected: (selected: string) => void;
-}
-
-const Item: React.FC<IMenuItemProps> = (props) => {
-  const { title, to, icon, selected, setSelected } = props;
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-
-  return (
-    <Box width="100%">
-      <Box p={1}>
-        <Divider color={colors.gray[100]} variant="fullWidth" />
-      </Box>
-      <MenuItem
-        // active={selected === title}
-        style={{ color: colors.gray[100] }}
-        onClick={() => setSelected(title)}
-        icon={icon}
-        disabled={selected === title}
-      >
-        <Link to={to} style={{ textDecoration: 'none' }}>
-          <Typography variant="h6" color={selected === title ? colors.gray[200] : colors.gray[100]}>
-            {title}
-          </Typography>
-        </Link>
-      </MenuItem>
-    </Box>
-  );
-};
+import SidebarItem from './SidebarItem';
+import CollapsibleSidebarItem from './CollapsibleSidebarItem';
 
 interface ISideBarProps {
   currentRoute: string;
@@ -68,9 +35,6 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
       sx={{
         '& .ps-sidebar-root': {
           borderRight: `0px solid ${colors.primary[900]} !important`,
-        },
-        '& .ps-menuitem-root .ps-menu-button:hover': {
-          backgroundColor: colors.gray[800],
         },
         '& .ps-disabled': {
           cursor: `not-allowed !important`,
@@ -132,27 +96,49 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
                 </Typography>
               </Box>
               <Box paddingLeft={isCollapsed ? undefined : '10%'}>
-                <Item
+                <SidebarItem
                   title={getResource('common:captionDashboard')}
                   to="/dashboard"
                   icon={<Dashboard />}
+                  hasDivider
                   selected={currentRoute}
                   setSelected={handleRouteChanged}
                 />
-                <Item
+                <CollapsibleSidebarItem
+                  title={getResource('common:captionFitness')}
+                  icon={<FitnessCenterOutlined />}
+                  selected={currentRoute}
+                  hasDivider
+                  subMenuItemProps={[
+                    {
+                      title: getResource('common:captionDashboard'),
+                      to: '/fitness-center',
+                      hasDivider: true,
+                      icon: <FitnessCenterOutlined />,
+                      selected: currentRoute,
+                      setSelected: handleRouteChanged,
+                    },
+                  ]}
+                  setSelected={handleRouteChanged}
+                />
+                <SidebarItem
                   title={getResource('common:captionHealthMonitoring')}
                   to="/health"
                   icon={<HealthAndSafety />}
+                  hasDivider
                   selected={currentRoute}
                   setSelected={handleRouteChanged}
                 />
-                <Item
-                  title={getResource('common:captionSandbox')}
-                  to="/sandbox"
-                  icon={<Science />}
-                  selected={currentRoute}
-                  setSelected={handleRouteChanged}
-                />
+                {process.env.REACT_APP_ENVIRONMENT === 'dev' && (
+                  <SidebarItem
+                    title={getResource('common:captionSandbox')}
+                    to="/sandbox"
+                    icon={<Science />}
+                    hasDivider
+                    selected={currentRoute}
+                    setSelected={handleRouteChanged}
+                  />
+                )}
               </Box>
             </Box>
           )}

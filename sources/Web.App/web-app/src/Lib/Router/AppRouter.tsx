@@ -11,6 +11,7 @@ import DashboardInitializationContainer from 'src/Pages/LandingPage/Dashboard/Da
 import { ColorModeContext, useMode } from '../theme';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import PublicRoute from './PublicRoute';
+import FitnessCenterDashboard from 'src/Pages/FitnessCenter/FitnessCenterDashboard';
 // import 'src/index.css';
 
 const AppRouter: React.FC = () => {
@@ -47,6 +48,7 @@ const AppRouter: React.FC = () => {
                 >
                   <Route path="/dashboard" Component={DashboardInitializationContainer} />
                   <Route path="/health" Component={HealthDataPage} />
+                  <Route path="/fitness-center" Component={FitnessCenterDashboard} />
                   <Route path="/sandbox" Component={SandBox} />
                 </Route>
               </Routes>

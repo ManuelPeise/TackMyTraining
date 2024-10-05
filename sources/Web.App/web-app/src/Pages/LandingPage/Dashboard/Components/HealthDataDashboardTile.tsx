@@ -48,7 +48,7 @@ const HealthDataDashboardTile: React.FC<IProps> = (props) => {
             >
               {model?.data?.heartBeat
                 ? getResource('common:labelCurrentHeartBeat').replace('{value}', `${model?.data?.heartBeat}`)
-                : 'n/a'}
+                : getResource('common:labelCurrentHeartBeatNotAvailable')}
             </Typography>
           </Box>
           <Box p={1} display="flex" alignItems="baseline">
@@ -63,7 +63,7 @@ const HealthDataDashboardTile: React.FC<IProps> = (props) => {
             >
               {model.data.weight
                 ? getResource('common:labelCurrentWeight').replace('{value}', `${model?.data?.weight}`)
-                : 'n/a'}
+                : getResource('common:labelCurrentWeightNotAvailable')}
             </Typography>
           </Box>
           <Box p={1} display="flex" alignItems="baseline">
@@ -78,7 +78,7 @@ const HealthDataDashboardTile: React.FC<IProps> = (props) => {
             >
               {model.data.bodyFat
                 ? getResource('common:labelCurrentBodyFat').replace('{value}', `${model?.data?.bodyFat}`)
-                : 'n/a'}
+                : getResource('common:labelCurrentBodyFatNotAvailable')}
             </Typography>
           </Box>
           <Box p={1} display="flex" alignItems="baseline">
@@ -91,9 +91,9 @@ const HealthDataDashboardTile: React.FC<IProps> = (props) => {
                 '&:hover': { cursor: 'pointer' },
               }}
             >
-              {model.data.muscleMass
+              {model?.data?.muscleMass
                 ? getResource('common:labelCurrentMuscleMass').replace('{value}', `${model?.data?.muscleMass}`)
-                : 'n/a'}
+                : getResource('common:labelCurrentMuscleMassNotAvailable')}
             </Typography>
           </Box>
           <Box p={1} display="flex" alignItems="baseline">
@@ -106,7 +106,9 @@ const HealthDataDashboardTile: React.FC<IProps> = (props) => {
                 '&:hover': { cursor: 'pointer' },
               }}
             >
-              {model.data.bmi ? getResource('common:labelCurrentBmi').replace('{value}', `${model?.data?.bmi}`) : 'n/a'}
+              {model?.data?.bmi
+                ? getResource('common:labelCurrentBmi').replace('{value}', `${model?.data?.bmi}`)
+                : getResource('common:labelCurrentBmiNotAvailable')}
             </Typography>
           </Box>
         </Box>
