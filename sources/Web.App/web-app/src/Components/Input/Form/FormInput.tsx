@@ -1,11 +1,13 @@
-import { Checkbox, FormControlLabel, ListItem, TextField } from '@mui/material';
+import { Checkbox, FormControlLabel, ListItem, TextField, useTheme } from '@mui/material';
 import React from 'react';
 import { TValue } from 'src/customTypes';
 import { DataTypeEnum } from 'src/Lib/Enums/DataTypeEnum';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import moment, { Moment } from 'moment';
+import { tokens } from 'src/Lib/theme';
 
 interface IProps {
   property: string;
@@ -14,10 +16,12 @@ interface IProps {
   label: string;
   disabled?: boolean;
   fullWidth?: boolean;
+  format?: 'DD.MM.YYYY' | 'DD.MM.YYYY hh:mm';
   error: string;
   required: boolean;
   position?: 'start' | 'end' | 'center';
   maxDate?: moment.Moment;
+  includeTime?: boolean;
   updateFunction: (value: TValue) => void;
   validationFunction?: (value: TValue) => boolean;
 }
@@ -118,7 +122,7 @@ const FormCheckBox: React.FC<IProps> = (props) => {
 };
 
 const FormDatePicker: React.FC<IProps> = (props) => {
-  const { property, value, disabled, label, position, maxDate, updateFunction } = props;
+  const { property, value, disabled, label, position, fullWidth, maxDate, includeTime, format, updateFunction } = props;
 
   const handleChange = React.useCallback(
     (newValue: Moment | null) => {
@@ -139,15 +143,32 @@ const FormDatePicker: React.FC<IProps> = (props) => {
       }}
     >
       <LocalizationProvider dateAdapter={AdapterMoment}>
-        <DesktopDatePicker
-          label={label}
-          format="DD.MM.YYYY"
-          value={moment(value as string)}
-          disabled={disabled}
-          onChange={handleChange}
-          maxDate={maxDate}
-          slotProps={{ textField: { variant: 'standard' } }}
-        />
+        {!includeTime ? (
+          <DesktopDatePicker
+            label={label}
+            sx={fullWidth ? { width: '100%' } : {}}
+            format={format}
+            value={moment(value as string)}
+            disabled={disabled}
+            onChange={handleChange}
+            maxDate={maxDate}
+            slotProps={{ textField: { variant: 'standard' } }}
+          />
+        ) : (
+          <DateTimePicker
+            orientation="landscape"
+            label={label}
+            sx={fullWidth ? { width: '100%' } : {}}
+            format={format}
+            value={moment(value as string)}
+            disabled={disabled}
+            onChange={handleChange}
+            maxDate={maxDate}
+            ampm={false}
+            minutesStep={5}
+            slotProps={{ textField: { variant: 'standard' } }}
+          />
+        )}
       </LocalizationProvider>
     </ListItem>
   );
@@ -158,6 +179,9 @@ const FormNumberInput: React.FC<IProps> = (props) => {
     props;
 
   const [isValid, setIsValid] = React.useState<boolean>(true);
+
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   React.useEffect(() => {
     if ((value as string).length === 0) setIsValid(true);
@@ -185,6 +209,7 @@ const FormNumberInput: React.FC<IProps> = (props) => {
     <ListItem key={property}>
       <TextField
         id={property}
+        color="secondary"
         required={required}
         fullWidth={fullWidth}
         label={label}
@@ -198,7 +223,10 @@ const FormNumberInput: React.FC<IProps> = (props) => {
           input: {
             slotProps: {
               input: {
-                style: { textAlign: 'right', MozAppearance: 'textfield' },
+                style: {
+                  textAlign: 'right',
+                  MozAppearance: 'textfield',
+                },
               },
             },
           },

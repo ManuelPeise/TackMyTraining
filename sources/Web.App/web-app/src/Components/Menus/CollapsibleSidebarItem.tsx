@@ -7,14 +7,14 @@ import { tokens } from 'src/Lib/theme';
 interface IProps {
   icon: JSX.Element;
   title: string;
-  selected: string;
+
   hasDivider?: boolean;
   setSelected: (selected: string) => void;
   subMenuItemProps: IMenuItemProps[];
 }
 
 const CollapsibleSidebarItem: React.FC<IProps> = (props) => {
-  const { selected, icon, title, hasDivider, subMenuItemProps } = props;
+  const { icon, title, hasDivider, subMenuItemProps } = props;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -27,9 +27,9 @@ const CollapsibleSidebarItem: React.FC<IProps> = (props) => {
       )}
       <SubMenu
         icon={icon}
-        disabled={selected === title}
+        // disabled={selected === title}
         label={title}
-        style={{ color: colors.gray[100], backgroundColor: colors.primary[600] }}
+        style={{ color: colors.gray[100], backgroundColor: colors.gray[800] }}
       >
         {subMenuItemProps.map((props, index) => {
           return <SidebarItem key={index} {...props} />;

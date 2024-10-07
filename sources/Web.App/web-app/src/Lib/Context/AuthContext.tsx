@@ -4,8 +4,8 @@ import { IJwtData, IRegistrationResult, IUserData } from '../Interfaces/IUserDat
 import { Login, Registration } from 'src/form';
 import { useLocalStorage } from 'src/Hooks/useLocalStorage';
 import { LocalStorageKeyEnum } from '../LocalStorage';
-import { useNavigate } from 'react-router-dom';
 import { serviceUrls, useApi } from 'src/Hooks/useApi';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = React.createContext<IAuthProps | null>(null);
 

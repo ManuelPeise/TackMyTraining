@@ -13,10 +13,10 @@ namespace Service.Api.Training
             _service = service;
         }
 
-        [HttpGet(Name = "GetAllAvailableTrainingsByCategory")]
-        public async Task<List<TrainingCategoryExportModel>> GetAllAvailableTrainingsByCategory()
+        [HttpGet(Name = "GetTrainingAvailableCategorizedConfigurations")]
+        public async Task<List<TrainingCategoryExportModel>> GetTrainingAvailableCategorizedConfigurations()
         {
-            return await _service.GetAllAvailableTrainingsByCategory();
+            return await _service.GetTrainingAvailableCategorizedConfigurations();
         }
     }
 }

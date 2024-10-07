@@ -18,14 +18,14 @@ const FitnessCenterToolbar: React.FC<IProps> = (props) => {
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Paper elevation={4} sx={{ width: '100%', padding: 2 }}>
+    <Paper elevation={4} sx={{ borderRadius: 0, width: '100%', padding: 2, backgroundColor: colors.gray[800] }}>
       <Toolbar>
         <Typography
           component="div"
           variant="h2"
           sx={{ color: colors.gray[100], flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
         >
-          {toCaption(getResource(`common:${resourceKey}`))}
+          {toCaption(getResource(resourceKey))}
         </Typography>
         <Box sx={{ display: { xs: 'none', sm: 'block' }, marginRight: { xl: 10 } }}>{children}</Box>
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>

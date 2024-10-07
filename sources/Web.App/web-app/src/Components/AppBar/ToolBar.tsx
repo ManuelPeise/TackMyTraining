@@ -4,7 +4,7 @@ import { useAuthentication } from 'src/Hooks/useAuthentication';
 import { tokens } from 'src/Lib/theme';
 import { Search, AccountCircle, Delete } from '@mui/icons-material';
 import { useI18n } from 'src/Hooks/useI18n';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface IToolbarBarProps {
   hasSearchBar?: boolean;
@@ -18,7 +18,7 @@ const AppToolBar: React.FC<IToolbarBarProps> = (props) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { getResource } = useI18n();
-  const currentLocation = useLocation();
+  // const currentLocation = useLocation();
 
   const onFilter = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,14 +66,14 @@ const AppToolBar: React.FC<IToolbarBarProps> = (props) => {
         ) : (
           <Box display="flex">
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-              {currentLocation.pathname === '/register' && (
+              {window.location.pathname === '/register' && (
                 <Link to="/">
                   <Button sx={{ color: colors.gray[400] }} onClick={onLogout}>
                     {getResource('common:labelLogin')}
                   </Button>
                 </Link>
               )}
-              {currentLocation.pathname === '/' && (
+              {window.location.pathname === '/' && (
                 <Link to="/register">
                   <Button sx={{ color: colors.gray[400] }} onClick={onLogout}>
                     {getResource('common:labelRegister')}

@@ -16,7 +16,7 @@ namespace BusinessLogic.Training
             _trainingConfigurations = TrainingConfigurations.Configurations;
         }
 
-        public async Task<List<TrainingCategoryExportModel>> GetAllAvailableTrainingsByCategory()
+        public async Task<List<TrainingCategoryExportModel>> GetTrainingAvailableCategorizedConfigurations()
         {
             try
             {

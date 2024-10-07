@@ -11,18 +11,14 @@ import DashboardInitializationContainer from 'src/Pages/LandingPage/Dashboard/Da
 import { ColorModeContext, useMode } from '../theme';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import PublicRoute from './PublicRoute';
-import FitnessCenterDashboard from 'src/Pages/FitnessCenter/FitnessCenterDashboard';
+import DashboardInitContainer from 'src/Pages/FitnessCenter/FitnessCenterDashboard';
+import TrainingTrackingPageContainer from 'src/Pages/FitnessCenter/TrainingTackingPage';
 // import 'src/index.css';
 
 const AppRouter: React.FC = () => {
   const { theme, colorMode } = useMode();
 
   const [filterText, setFilterText] = React.useState<string>('');
-  const [currentRoute, setCurrentRoute] = React.useState('');
-
-  const handleChangeRoute = React.useCallback((route: string) => {
-    setCurrentRoute(route);
-  }, []);
 
   const onFilterTextChanged = React.useCallback((filter: string) => {
     setFilterText(filter);
@@ -41,14 +37,11 @@ const AppRouter: React.FC = () => {
                   <Route path="/" Component={LoginPage} />
                   <Route path="/register" Component={RegisterPage} />
                 </Route>
-                {/* private routes */}
-                <Route
-                  path="/"
-                  element={<PrivateAppRoute currentRoute={currentRoute} handleRouteChanged={handleChangeRoute} />}
-                >
+                <Route path="/" element={<PrivateAppRoute />}>
                   <Route path="/dashboard" Component={DashboardInitializationContainer} />
                   <Route path="/health" Component={HealthDataPage} />
-                  <Route path="/fitness-center" Component={FitnessCenterDashboard} />
+                  <Route path="/fitness-center" Component={DashboardInitContainer} />
+                  <Route path="/fitness-center/tracking" Component={TrainingTrackingPageContainer} />
                   <Route path="/sandbox" Component={SandBox} />
                 </Route>
               </Routes>

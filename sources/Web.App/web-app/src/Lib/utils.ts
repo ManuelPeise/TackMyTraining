@@ -79,3 +79,10 @@ export const getBmi = (height: number, weight: number) => {
 export const toCaption = (value: string) => {
   return value.toUpperCase();
 };
+
+export const sortByKey = (a: unknown, b: unknown, type: 'string' | 'number') => {
+  if (type === 'string') {
+    return (a as string).localeCompare(b as string);
+  }
+  return a > b ? -1 : 1;
+};

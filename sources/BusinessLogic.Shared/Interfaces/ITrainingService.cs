@@ -4,6 +4,6 @@ namespace BusinessLogic.Shared.Interfaces
 {
     public interface ITrainingService
     {
-        Task<List<TrainingCategoryExportModel>> GetAllAvailableTrainingsByCategory();
+        Task<List<TrainingCategoryExportModel>> GetTrainingAvailableCategorizedConfigurations();
     }
 }

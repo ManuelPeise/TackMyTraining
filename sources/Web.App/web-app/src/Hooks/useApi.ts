@@ -36,6 +36,9 @@ export const serviceUrls = {
     getDashboardTiles: 'Dashboard/LoadDashboardTiles',
     updateDashboardConfiguration: 'Dashboard/UpdateDashboardSettings',
   },
+  training: {
+    getTrainingAvailableCategorizedConfigurations: 'TrainingService/GetTrainingAvailableCategorizedConfigurations',
+  },
   // test: 'Test/Tester',
 };
 

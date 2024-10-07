@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material';
 import React from 'react';
-import { ResponsiveContainer, YAxis, XAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';
+import { ResponsiveContainer, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';
 import { HealthData } from 'src/dataTypes';
 import { tokens } from 'src/Lib/theme';
 
@@ -43,11 +43,19 @@ const HealthLineChart: React.FC<IProps> = (props) => {
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data}>
         {dataKeys.map((key) => {
-          return <Line dataKey={key} type="monotone" stroke={getColor(key as HealthChartKeyEnum)} strokeWidth={2} />;
+          return (
+            <Line
+              key={key}
+              dataKey={key}
+              type="monotone"
+              stroke={getColor(key as HealthChartKeyEnum)}
+              strokeWidth={2}
+            />
+          );
         })}
         <CartesianGrid stroke={colors.chartColors.light} strokeDasharray="4 4" style={{ opacity: 0.1 }} />
-        <XAxis dataKey="date" />
-        <YAxis />
+        {/* <XAxis dataKey="date" />
+        <YAxis /> */}
         <Tooltip filterNull />
       </LineChart>
     </ResponsiveContainer>

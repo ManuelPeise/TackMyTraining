@@ -9,44 +9,51 @@ import {
   Menu as MenuIcon,
   AccountCircleOutlined,
   FitnessCenterOutlined,
+  InsightsOutlined,
 } from '@mui/icons-material';
 import { tokens } from 'src/Lib/theme';
 import { useAuthentication } from 'src/Hooks/useAuthentication';
 import { useI18n } from 'src/Hooks/useI18n';
 import SidebarItem from './SidebarItem';
 import CollapsibleSidebarItem from './CollapsibleSidebarItem';
+import { useNavigate } from 'react-router-dom';
 
-interface ISideBarProps {
-  currentRoute: string;
-  handleRouteChanged: (route: string) => void;
-}
+interface ISideBarProps {}
 
 const AppSideBar: React.FC<ISideBarProps> = (props) => {
-  const { currentRoute, handleRouteChanged } = props;
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { userData } = useAuthentication();
   const { getResource } = useI18n();
-
+  const navigate = useNavigate();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+
+  const onNavigate = React.useCallback(
+    (path: string) => {
+      navigate(path);
+    },
+    [navigate]
+  );
 
   return (
     <Box
       sx={{
         '& .ps-sidebar-root': {
-          borderRight: `0px solid ${colors.primary[900]} !important`,
+          borderRight: `0px solid ${colors.gray[800]} !important`,
         },
         '& .ps-disabled': {
           cursor: `not-allowed !important`,
         },
+        width: '100%',
         height: '100%',
       }}
     >
       <Sidebar
         collapsed={isCollapsed}
-        backgroundColor={colors.primary[600]}
+        backgroundColor={colors.gray[800]}
         style={{
           padding: 0,
+          width: '100%',
           height: '100%',
         }}
       >
@@ -54,9 +61,10 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
           {/* header */}
           <MenuItem
             onClick={() => setIsCollapsed(!isCollapsed)}
-            icon={isCollapsed ? <MenuOutlined /> : undefined}
+            icon={isCollapsed ? <MenuOutlined sx={{ width: 25, height: 25 }} /> : undefined}
             style={{
-              padding: 0,
+              display: 'flex',
+              justifyItems: 'center',
               margin: '0 0 0 0',
               color: colors.gray[100],
               backgroundColor: colors.gray[800],
@@ -101,13 +109,12 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
                   to="/dashboard"
                   icon={<Dashboard />}
                   hasDivider
-                  selected={currentRoute}
-                  setSelected={handleRouteChanged}
+                  selected="/dashboard"
+                  onNavigate={onNavigate}
                 />
                 <CollapsibleSidebarItem
                   title={getResource('common:captionFitness')}
                   icon={<FitnessCenterOutlined />}
-                  selected={currentRoute}
                   hasDivider
                   subMenuItemProps={[
                     {
@@ -115,19 +122,27 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
                       to: '/fitness-center',
                       hasDivider: true,
                       icon: <FitnessCenterOutlined />,
-                      selected: currentRoute,
-                      setSelected: handleRouteChanged,
+                      selected: '/fitness-center',
+                      onNavigate: onNavigate,
+                    },
+                    {
+                      title: getResource('training:labelTracking'),
+                      to: '/fitness-center/tracking',
+                      hasDivider: true,
+                      icon: <InsightsOutlined />,
+                      selected: '/fitness-center/tracking',
+                      onNavigate: onNavigate,
                     },
                   ]}
-                  setSelected={handleRouteChanged}
+                  setSelected={onNavigate}
                 />
                 <SidebarItem
                   title={getResource('common:captionHealthMonitoring')}
                   to="/health"
                   icon={<HealthAndSafety />}
                   hasDivider
-                  selected={currentRoute}
-                  setSelected={handleRouteChanged}
+                  selected="/health"
+                  onNavigate={onNavigate}
                 />
                 {process.env.REACT_APP_ENVIRONMENT === 'dev' && (
                   <SidebarItem
@@ -135,8 +150,8 @@ const AppSideBar: React.FC<ISideBarProps> = (props) => {
                     to="/sandbox"
                     icon={<Science />}
                     hasDivider
-                    selected={currentRoute}
-                    setSelected={handleRouteChanged}
+                    selected="/sandbox"
+                    onNavigate={onNavigate}
                   />
                 )}
               </Box>

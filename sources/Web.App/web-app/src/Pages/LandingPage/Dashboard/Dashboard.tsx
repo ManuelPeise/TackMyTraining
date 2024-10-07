@@ -98,6 +98,7 @@ const Dashboard: React.FC<IDashboardProps> = (props) => {
               {activeTiles?.map((tile) => {
                 return (
                   <Box
+                    key={tile.key}
                     gridColumn={{ md: 'span 12', xl: 'span 6' }}
                     gridRow="span 2"
                     sx={{ backgroundColor: colors.primary[400] }}
