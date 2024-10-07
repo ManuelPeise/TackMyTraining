@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, ListItem, TextField, useTheme } from '@mui/material';
+import { Checkbox, FormControlLabel, ListItem, TextField } from '@mui/material';
 import React from 'react';
 import { TValue } from 'src/customTypes';
 import { DataTypeEnum } from 'src/Lib/Enums/DataTypeEnum';
@@ -7,7 +7,6 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import moment, { Moment } from 'moment';
-import { tokens } from 'src/Lib/theme';
 
 interface IProps {
   property: string;
@@ -179,9 +178,6 @@ const FormNumberInput: React.FC<IProps> = (props) => {
     props;
 
   const [isValid, setIsValid] = React.useState<boolean>(true);
-
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
 
   React.useEffect(() => {
     if ((value as string).length === 0) setIsValid(true);
