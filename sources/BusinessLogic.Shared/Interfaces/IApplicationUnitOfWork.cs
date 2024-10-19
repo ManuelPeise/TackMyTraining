@@ -5,11 +5,13 @@ namespace BusinessLogic.Shared.Interfaces
 {
     public interface IApplicationUnitOfWork : IDisposable
     {
-        public RepositoryBase<AppUser> UserRepository { get; }
-        public RepositoryBase<UserCredentials> UserCredentialsRepository { get; }
-        public RepositoryBase<UserHealthData> HealthDataRepository { get; }
-        public RepositoryBase<UserSettings> UserSettingsRepository { get; }
-        public RepositoryBase<LogMessage> LogRepository { get; }
+        RepositoryBase<AppUser> UserRepository { get; }
+        RepositoryBase<UserCredentials> UserCredentialsRepository { get; }
+        RepositoryBase<UserHealthData> HealthDataRepository { get; }
+        RepositoryBase<UserSettings> UserSettingsRepository { get; }
+        RepositoryBase<LogMessage> LogRepository { get; }
+        RepositoryBase<Contact> ContactRepository { get; }
+
         Task SaveChanges();
     }
 }

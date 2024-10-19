@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.TrainingContext.Migrations
 {
     [DbContext(typeof(TrainingDbContext))]
-    [Migration("20240930184908_AddUserSettingsTable")]
-    partial class AddUserSettingsTable
+    [Migration("20241011131350_InitializeDatabase")]
+    partial class InitializeDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,9 @@ namespace Data.TrainingContext.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ContactId")
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedAt")
@@ -67,6 +70,8 @@ namespace Data.TrainingContext.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ContactId");
+
                     b.HasIndex("CrendentialsId");
 
                     b.ToTable("AppUser");
@@ -75,7 +80,7 @@ namespace Data.TrainingContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = "2024-09-30",
+                            CreatedAt = "2024-10-11",
                             CreatedBy = "System",
                             CrendentialsId = 1,
                             DateOfBirth = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -83,9 +88,56 @@ namespace Data.TrainingContext.Migrations
                             FirstName = "",
                             IsActive = true,
                             LastName = "",
-                            UpdatedAt = "2024-09-30",
+                            UpdatedAt = "2024-10-11",
                             UpdatedBy = "System"
                         });
+                });
+
+            modelBuilder.Entity("Data.Models.Entities.Contact", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("HouseNumber")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedAt")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Contacts");
                 });
 
             modelBuilder.Entity("Data.Models.Entities.LogMessage", b =>
@@ -179,14 +231,14 @@ namespace Data.TrainingContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = "2024-09-30",
+                            CreatedAt = "2024-10-11",
                             CreatedBy = "System",
                             FailedLoginAttemts = 0,
                             JwT = "",
-                            Password = "U3VwZXJTZWNyZXRmMTEwYmFlMC1kMGQ5LTRkZGUtODY5Ni1jNWViZWQyNWRkNDM=",
+                            Password = "U3VwZXJTZWNyZXRiNGRiZWYwYy0zZTU4LTQzM2MtODY3My01ZTM5MTZkZWQwNmU=",
                             RefreshToken = "",
-                            Salt = "f110bae0-d0d9-4dde-8696-c5ebed25dd43",
-                            UpdatedAt = "2024-09-30",
+                            Salt = "b4dbef0c-3e58-433c-8673-5e3916ded06e",
+                            UpdatedAt = "2024-10-11",
                             UpdatedBy = "System"
                         });
                 });
@@ -285,11 +337,17 @@ namespace Data.TrainingContext.Migrations
 
             modelBuilder.Entity("Data.Models.Entities.AppUser", b =>
                 {
+                    b.HasOne("Data.Models.Entities.Contact", "Contact")
+                        .WithMany()
+                        .HasForeignKey("ContactId");
+
                     b.HasOne("Data.Models.Entities.UserCredentials", "Credentials")
                         .WithMany()
                         .HasForeignKey("CrendentialsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Contact");
 
                     b.Navigation("Credentials");
                 });

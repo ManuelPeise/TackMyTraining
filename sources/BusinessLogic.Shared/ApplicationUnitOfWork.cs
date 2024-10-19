@@ -14,6 +14,7 @@ namespace BusinessLogic.Shared
         private RepositoryBase<UserCredentials> _UserCredentialsRepository;
         private RepositoryBase<UserHealthData> _healthDataRepository;
         private RepositoryBase<UserSettings> _userSettingsRepository;
+        private RepositoryBase<Contact> _contactRepository;
         private RepositoryBase<LogMessage> _logRepository;
         private bool disposedValue;
 
@@ -25,6 +26,7 @@ namespace BusinessLogic.Shared
             _healthDataRepository = new RepositoryBase<UserHealthData>(context);
             _userSettingsRepository = new RepositoryBase<UserSettings>(context);
             _logRepository = new RepositoryBase<LogMessage>(context);
+            _contactRepository = new RepositoryBase<Contact>(context);
         }
 
         public RepositoryBase<AppUser> UserRepository { get => _userRepository ?? new RepositoryBase<AppUser>(_context); }
@@ -32,6 +34,7 @@ namespace BusinessLogic.Shared
         public RepositoryBase<LogMessage> LogRepository { get => _logRepository ?? new RepositoryBase<LogMessage>(_context); }
         public RepositoryBase<UserHealthData> HealthDataRepository { get => _healthDataRepository ?? new RepositoryBase<UserHealthData>(_context); }
         public RepositoryBase<UserSettings> UserSettingsRepository { get => _userSettingsRepository ?? new RepositoryBase<UserSettings>(_context); }
+        public RepositoryBase<Contact> ContactRepository { get => _contactRepository ?? new RepositoryBase<Contact>(_context); }
 
         public async Task SaveChanges()
         {

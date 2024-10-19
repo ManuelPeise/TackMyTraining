@@ -15,6 +15,9 @@ namespace Data.Models.Entities
         public int CrendentialsId { get; set; }
         [ForeignKey(nameof(CrendentialsId))]
         public UserCredentials? Credentials { get; set; }
+        public int? ContactId { get; set; }
+        [ForeignKey(nameof(ContactId))]
+        public Contact? Contact { get; set; }
 
     }
 }

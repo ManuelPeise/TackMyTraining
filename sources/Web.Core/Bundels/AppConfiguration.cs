@@ -39,6 +39,7 @@ namespace Web.Core.Bundels
             builder.Services.AddScoped<IHealthModule, HealthModule>();
             builder.Services.AddScoped<IDashboardService, DashboardService>();
             builder.Services.AddScoped<ITrainingService, TrainingService>();
+            builder.Services.AddScoped<IUserService, UserService>();
             ConfigureJwt(builder);
 
             builder.Services.AddCors(opt =>
@@ -58,11 +59,10 @@ namespace Web.Core.Bundels
 
         public static void ConfigureApp(WebApplication app)
         {
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
             app.UseHttpsRedirection();
             app.UseHttpsRedirection();
             app.UseAuthorization();

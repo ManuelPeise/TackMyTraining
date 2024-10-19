@@ -35,6 +35,7 @@ namespace BusinessLogic.Administration
                     var user = existingUsers.First();
 
                     await TryLoadCredentials(user.CrendentialsId);
+                    await TryLoadContactData(user.ContactId);
 
                     if (user.IsActive && user.Credentials != null)
                     {
@@ -66,7 +67,16 @@ namespace BusinessLogic.Administration
                                 {
                                     JwtToken = jwt,
                                     RefreshToken = refreshToken,
+                                },
+                                ContactData = new ContactData
+                                {
+                                    Street = user.Contact?.Street ?? string.Empty,
+                                    HouseNumber = user?.Contact?.HouseNumber ?? string.Empty,
+                                    PostalCode = user?.Contact?.PostalCode ?? string.Empty,
+                                    City = user?.Contact?.City ?? string.Empty,
+                                    Country = user?.Contact?.Country ?? string.Empty,
                                 }
+                                
                             };
                         }
                         else
@@ -126,6 +136,16 @@ namespace BusinessLogic.Administration
         private async Task TryLoadCredentials(int crendentialsId)
         {
             await _unitOfWork.UserCredentialsRepository.GetByIdAsync(crendentialsId);
+        }
+
+        private async Task TryLoadContactData(int? contactId)
+        {
+            if(contactId == null)
+            {
+                return;
+            }
+
+            await _unitOfWork.ContactRepository.GetByIdAsync((int)contactId);
         }
     }
 }
