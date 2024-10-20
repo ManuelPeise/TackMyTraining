@@ -130,6 +130,9 @@ namespace BusinessLogic.Administration
                 new Claim("UserName", account.UserName),
                 new Claim("FirstName", account.FirstName ?? ""),
                 new Claim("LastName", account.LastName ?? ""),
+                new Claim("IsActive", account.IsActive.ToString() ?? "false"),
+                new Claim("CrendentialsId", account.CrendentialsId.ToString() ?? "-1"),
+                new Claim("ContactId", account.ContactId.ToString() ?? "-1"),
             };
         }
 

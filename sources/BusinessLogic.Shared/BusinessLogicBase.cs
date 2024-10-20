@@ -59,6 +59,9 @@ namespace BusinessLogic.Shared
                 FirstName = _claimsAccessor.GetClaimsValue<string>("FirstName"),
                 LastName = _claimsAccessor.GetClaimsValue<string>("LastName"),
                 Email = _claimsAccessor.GetClaimsValue<string>("Email"),
+                IsActive = bool.Parse(_claimsAccessor.GetClaimsValue<string>("IsActive")),
+                ContactId = int.Parse(_claimsAccessor.GetClaimsValue<string>("ContactId")),
+                CrendentialsId = int.Parse(_claimsAccessor.GetClaimsValue<string>("CrendentialsId"))
 
             };
         }
