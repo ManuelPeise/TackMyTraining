@@ -6,7 +6,8 @@ namespace BusinessLogic.Shared.Interfaces
     public interface IUserService
     {
         Task<UserProfileExportModel?> GetProfileData();
-        Task<bool> UpdateProfile(UserProfile profile);
-        
+        Task<bool> UpdateProfileData(ProfileImportModel profileImport);
+        Task<bool> UpdateContactData(ContactDataImportModel contactDataImport);
+
     }
 }

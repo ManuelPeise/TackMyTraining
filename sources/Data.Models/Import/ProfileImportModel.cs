@@ -1,10 +1,9 @@
-﻿namespace Data.Models.Interfaces
+﻿namespace Data.Models.Import
 {
-    public interface IUser
+    public class ProfileImportModel
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string DateOfBirth { get; set; }
     }
 }

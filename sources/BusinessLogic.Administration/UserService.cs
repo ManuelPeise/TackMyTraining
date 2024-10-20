@@ -68,22 +68,23 @@ namespace BusinessLogic.Administration
 
                 await UnitOfWork.SaveChanges();
 
-                return new UserProfileExportModel { ContactData = new ContactData()};
+                return new UserProfileExportModel { ContactData = new ContactData() };
             }
         }
 
-        public async Task<bool> UpdateProfile(UserProfile profile)
+        public async Task<bool> UpdateProfileData(ProfileImportModel profileImport)
         {
+
             try
             {
-                var user = await UnitOfWork.UserRepository.GetByIdAsync(profile.Id);
+                var user = await UnitOfWork.UserRepository.GetByIdAsync(CurrentUser.Id);
 
                 if (user == null)
                 {
                     await UnitOfWork.LogRepository.AddAsync(new LogMessage
                     {
                         Trigger = nameof(UserService),
-                        Message = "Update user profile failed!",
+                        Message = "Update user profile data failed!",
                         ExceptionJson = "",
                         TimeStamp = DateTime.Now
                     });
@@ -93,40 +94,20 @@ namespace BusinessLogic.Administration
                     return false;
                 }
 
-                var profileChanged = false;
+                user.FirstName = profileImport.FirstName;
+                user.LastName = profileImport.LastName;
+                user.Email = profileImport.Email;
 
-                if (user.ContactId != null && user.Contact != null)
-                {
-                    await LoadContactData(user.ContactId);
+                var changesApplied = await UnitOfWork.UserRepository.Update(user);
 
-                    user.Contact.Street = profile.ContactData.Street;
-                    user.Contact.HouseNumber = profile.ContactData.HouseNumber;
-                    user.Contact.PostalCode = profile.ContactData.PostalCode;
-                    user.Contact.City = profile.ContactData.City;
-                    user.Contact.Country = profile.ContactData.Country;
-
-                    profileChanged = true;
-                }
-                else
-                {
-                    user.Contact = new Contact
-                    {
-                        Street = profile.ContactData.Street,
-                        HouseNumber = profile.ContactData.HouseNumber,
-                        PostalCode = profile.ContactData.PostalCode,
-                        City = profile.ContactData.City,
-                        Country = profile.ContactData.Country,
-                    };
-
-                    profileChanged = true;
-                }
-
-                if (profileChanged)
+                if (changesApplied)
                 {
                     await UnitOfWork.SaveChanges();
-                }
 
-                return true;
+                    return true;
+                }
+                
+                return false;
             }
             catch (Exception exception)
             {
@@ -143,6 +124,78 @@ namespace BusinessLogic.Administration
                 return false;
             }
         }
+
+        public async Task<bool> UpdateContactData(ContactDataImportModel contactDataImport)
+        {
+            try
+            {
+                if(CurrentUser.ContactId == null)
+                {
+                    await UnitOfWork.LogRepository.AddAsync(new LogMessage
+                    {
+                        Trigger = nameof(UserService),
+                        Message = "Update contact data failed!",
+                        ExceptionJson = "",
+                        TimeStamp = DateTime.Now
+                    });
+
+                    await UnitOfWork.SaveChanges();
+
+                    return false;
+                }
+
+                var contact = await UnitOfWork.ContactRepository.GetByIdAsync((int)CurrentUser.ContactId);
+
+                if (contact == null)
+                {
+                    await UnitOfWork.LogRepository.AddAsync(new LogMessage
+                    {
+                        Trigger = nameof(UserService),
+                        Message = "Could not find contact in database, update contact data failed!",
+                        ExceptionJson = "",
+                        TimeStamp = DateTime.Now
+                    });
+
+                    await UnitOfWork.SaveChanges();
+
+                    return false;
+                }
+
+                contact.Street = contactDataImport.Street;
+                contact.HouseNumber = contactDataImport.HouseNumber;
+                contact.PostalCode = contactDataImport.PostalCode;
+                contact.City = contactDataImport.City;
+                contact.Country = contactDataImport.Country;
+
+
+                var changesApplied = await UnitOfWork.ContactRepository.Update(contact);
+
+                if (changesApplied)
+                {
+                    await UnitOfWork.SaveChanges();
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception exception)
+            {
+                await UnitOfWork.LogRepository.AddAsync(new LogMessage
+                {
+                    Trigger = nameof(UserService),
+                    Message = "Update contact data failed!",
+                    ExceptionJson = JsonConvert.SerializeObject(exception),
+                    TimeStamp = DateTime.Now
+                });
+
+                await UnitOfWork.SaveChanges();
+
+                return false;
+            }
+        }
+
+        
 
         private async Task LoadContactData(int? contactId)
         {

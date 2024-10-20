@@ -10,7 +10,7 @@ namespace Data.Models.Entities
         public string DisplayName => $"{FirstName}.{LastName}";
         public string Email { get; set; } = string.Empty;
         public string UserName => Email;
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
         public bool IsActive { get; set; }
         public int CrendentialsId { get; set; }
         [ForeignKey(nameof(CrendentialsId))]

@@ -27,7 +27,7 @@ namespace Data.TrainingContext.Configurations
                 Id = 1,
                 FirstName = _configuration["DefaultUser:FirstName"],
                 LastName = _configuration["DefaultUser:LastName"],
-                DateOfBirth = dateOfBirth,
+                DateOfBirth = dateOfBirth.ToString("dd.MM.yyyy"),
                 Email = _configuration["DefaultUser:Email"],
                 IsActive = true,
                 CrendentialsId = 1,

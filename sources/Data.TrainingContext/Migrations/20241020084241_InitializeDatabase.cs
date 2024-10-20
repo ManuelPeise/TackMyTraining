@@ -135,7 +135,7 @@ namespace Data.TrainingContext.Migrations
                     FirstName = table.Column<string>(type: "longtext", nullable: false),
                     LastName = table.Column<string>(type: "longtext", nullable: false),
                     Email = table.Column<string>(type: "longtext", nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DateOfBirth = table.Column<string>(type: "longtext", nullable: false),
                     IsActive = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CrendentialsId = table.Column<int>(type: "int", nullable: false),
                     ContactId = table.Column<int>(type: "int", nullable: true),
@@ -164,12 +164,12 @@ namespace Data.TrainingContext.Migrations
             migrationBuilder.InsertData(
                 table: "AppUserCredentials",
                 columns: new[] { "Id", "CreatedAt", "CreatedBy", "FailedLoginAttemts", "JwT", "Password", "RefreshToken", "Salt", "UpdatedAt", "UpdatedBy" },
-                values: new object[] { 1, "2024-10-11", "System", 0, "", "U3VwZXJTZWNyZXRiNGRiZWYwYy0zZTU4LTQzM2MtODY3My01ZTM5MTZkZWQwNmU=", "", "b4dbef0c-3e58-433c-8673-5e3916ded06e", "2024-10-11", "System" });
+                values: new object[] { 1, "2024-10-20", "System", 0, "", "U3VwZXJTZWNyZXQ0YjY2MjQ2Yy0xOGJjLTQ2NTMtYmZjZS03OWJiODc5ZjI4NmI=", "", "4b66246c-18bc-4653-bfce-79bb879f286b", "2024-10-20", "System" });
 
             migrationBuilder.InsertData(
                 table: "AppUser",
                 columns: new[] { "Id", "ContactId", "CreatedAt", "CreatedBy", "CrendentialsId", "DateOfBirth", "Email", "FirstName", "IsActive", "LastName", "UpdatedAt", "UpdatedBy" },
-                values: new object[] { 1, null, "2024-10-11", "System", 1, new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "test@training.com", "", true, "", "2024-10-11", "System" });
+                values: new object[] { 1, null, "2024-10-20", "System", 1, "01.01.2020", "test@training.com", "", true, "", "2024-10-20", "System" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppUser_ContactId",

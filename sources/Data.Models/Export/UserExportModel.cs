@@ -9,7 +9,7 @@ namespace Data.Models.Export
         public string UserName { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
         public bool IsActive { get; set; }
         public JWTData JwtData { get; set; } = new JWTData();
         public ContactData ContactData { get; set; } = new ContactData();
@@ -21,7 +21,7 @@ namespace Data.Models.Export
         public string LastName { get; set; } = string.Empty;
         public string UserName { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
         public ContactData ContactData { get; set; } = new ContactData();
     }
 

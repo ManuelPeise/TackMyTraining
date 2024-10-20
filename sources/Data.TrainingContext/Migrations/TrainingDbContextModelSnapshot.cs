@@ -39,8 +39,9 @@ namespace Data.TrainingContext.Migrations
                     b.Property<int>("CrendentialsId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("DateOfBirth")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -77,15 +78,15 @@ namespace Data.TrainingContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = "2024-10-11",
+                            CreatedAt = "2024-10-20",
                             CreatedBy = "System",
                             CrendentialsId = 1,
-                            DateOfBirth = new DateTime(2020, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateOfBirth = "01.01.2020",
                             Email = "test@training.com",
                             FirstName = "",
                             IsActive = true,
                             LastName = "",
-                            UpdatedAt = "2024-10-11",
+                            UpdatedAt = "2024-10-20",
                             UpdatedBy = "System"
                         });
                 });
@@ -228,14 +229,14 @@ namespace Data.TrainingContext.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = "2024-10-11",
+                            CreatedAt = "2024-10-20",
                             CreatedBy = "System",
                             FailedLoginAttemts = 0,
                             JwT = "",
-                            Password = "U3VwZXJTZWNyZXRiNGRiZWYwYy0zZTU4LTQzM2MtODY3My01ZTM5MTZkZWQwNmU=",
+                            Password = "U3VwZXJTZWNyZXQ0YjY2MjQ2Yy0xOGJjLTQ2NTMtYmZjZS03OWJiODc5ZjI4NmI=",
                             RefreshToken = "",
-                            Salt = "b4dbef0c-3e58-433c-8673-5e3916ded06e",
-                            UpdatedAt = "2024-10-11",
+                            Salt = "4b66246c-18bc-4653-bfce-79bb879f286b",
+                            UpdatedAt = "2024-10-20",
                             UpdatedBy = "System"
                         });
                 });
