@@ -4,5 +4,7 @@ export const enum NavigationEnum {
   Home = 'home',
   AppSettings = 'app-settings',
   Profile = 'profile',
+  ProfileData = 'profile-data',
+  ProfileContactData = 'profile-contact-data',
   Sandbox = 'sandbox',
 }

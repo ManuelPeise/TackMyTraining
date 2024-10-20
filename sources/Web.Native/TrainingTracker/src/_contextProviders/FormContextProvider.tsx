@@ -8,23 +8,33 @@ import { CustomFormContentProps, FormContextProps } from 'src/_lib/_types/formCo
 export const FormProviderContext = React.createContext<CustomFormContentProps>({} as CustomFormContentProps);
 
 const FormContextProvider = <TModel,>(props: FormContextProps<TModel>) => {
-  const { children, padding, defaultValues, buttonPosition, actionLabel, cancelLabel, marginTop, onSubmit } = props;
+  const {
+    additionalStyle,
+    children,
+    padding,
+    defaultValues,
+    buttonPosition,
+    actionLabel,
+    cancelLabel,
+    marginTop,
+    onSubmit,
+  } = props;
   const [isSubmitted, setIsSubmitted] = React.useState(false);
   const { styles } = useAppContext();
-  const methods = useForm(defaultValues);
+  const methods = useForm({ defaultValues: defaultValues, mode: 'all' });
 
   const onResetToDefaults = () => {
     methods.reset(methods.formState.defaultValues);
   };
 
   const handleSubmit = React.useCallback(async () => {
-    await onSubmit().then((result) => {
+    await onSubmit(methods.watch()).then((result) => {
       setIsSubmitted(result);
     });
-  }, [onSubmit]);
+  }, [methods, onSubmit]);
 
   return (
-    <View style={[styles.containerStyles.formStyle, { padding: padding }]}>
+    <View style={[styles.containerStyles.formStyle, additionalStyle, { padding: padding }]}>
       <FormProviderContext.Provider
         value={{
           methods: methods,
@@ -42,8 +52,8 @@ const FormContextProvider = <TModel,>(props: FormContextProps<TModel>) => {
           <View>{children}</View>
           <SaveCancelButtons
             marginTop={marginTop}
-            canCancel={!methods.formState.isLoading || !methods.formState.isSubmitted || methods.formState.isDirty}
-            canSave={!methods.formState.isLoading && !methods.formState.isSubmitted && methods.formState.isValid}
+            canCancel={methods.formState.isDirty}
+            canSave={methods.formState.isDirty && methods.formState.isValid}
             position={buttonPosition}
             cancelLabel={cancelLabel}
             saveLabel={actionLabel}

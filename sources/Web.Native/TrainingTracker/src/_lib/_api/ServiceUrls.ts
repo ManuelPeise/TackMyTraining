@@ -17,6 +17,7 @@ export const serviceUrls = {
   },
   profile: {
     getProfile: 'ProfileService/GetProfile',
-    postProfile: 'ProfileService/UpdateProfile',
+    postProfileUpdate: 'ProfileService/UpdateProfile',
+    postContactData: 'ProfileService/UpdateContact',
   },
 };

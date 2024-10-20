@@ -6,8 +6,8 @@ import { NavigationEnum } from 'src/_lib/_enums/NavigationEnum';
 import DrawerContent from './DrawerContent';
 import HomeScreen from 'src/_views/Home/HomeScreen';
 import AppSettingsScreen from 'src/_views/Settings/AppSettingsScreen';
-import ProfileScreen from 'src/_views/User/ProfileScreen';
 import SandboxScreen from 'src/_views/Sandbox/SandboxScreen';
+import UserProfileTabNavigation from 'src/_views/User/Components/UserTabNavigation';
 
 const Drawer = createDrawerNavigator();
 
@@ -19,6 +19,7 @@ const AppStack: React.FC = () => {
       initialRouteName={NavigationEnum.Home}
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{
+        unmountOnBlur: true,
         headerShown: false,
         drawerStyle: { padding: 0, margin: 0, backgroundColor: styles.colors.gray[800] },
       }}
@@ -41,7 +42,7 @@ const AppStack: React.FC = () => {
       />
       <Drawer.Screen
         name={NavigationEnum.Profile}
-        component={ProfileScreen}
+        component={UserProfileTabNavigation}
         options={{
           drawerLabel: getResource('nav:labelProfile'),
           title: getResource('nav:labelProfile'),

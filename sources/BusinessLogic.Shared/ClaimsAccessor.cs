@@ -22,6 +22,11 @@ namespace BusinessLogic.Shared
                 var selectedClaimField = _claimsDictionary[key];
                 var type = typeof(T);
 
+                if(selectedClaimField == null) 
+                { 
+                    return default(T?);
+                }
+
                 if (type == typeof(int))
                 {
                     return (T)Convert.ChangeType(int.Parse(selectedClaimField), type);

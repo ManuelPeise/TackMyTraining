@@ -12,6 +12,7 @@ export const textCentered: StyleProp<TextStyle> = {
 
 type ContainerStyles = {
   formStyle: StyleProp<ViewStyle>;
+  profileHeaderStyle: StyleProp<ViewStyle>;
   pageContainerStyle: StyleProp<ViewStyle>;
   flexContainerStyle: StyleProp<ViewStyle>;
   gridRow: StyleProp<ViewStyle>;

@@ -37,6 +37,7 @@ const AuthContextProvider: React.FC<AuthContextProps> = (props) => {
           if (res.status === 200) {
             const responseData: UserData = await JSON.parse(JSON.stringify(res.data));
 
+            console.log('AuthRes:', responseData);
             dispatch({
               userInfo: {
                 firstName: responseData.firstName,

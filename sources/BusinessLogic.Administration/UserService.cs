@@ -11,8 +11,6 @@ namespace BusinessLogic.Administration
     {
         public UserService(IApplicationUnitOfWork applicationUnitOfWork) : base(applicationUnitOfWork)
         {
-
-
         }
 
         public async Task<UserProfileExportModel?> GetProfileData()
@@ -44,8 +42,8 @@ namespace BusinessLogic.Administration
                     LastName = profile.LastName,
                     UserName = profile.UserName,
                     Email = profile.Email,
-                    DateOfBirth = profile.DateOfBirth,
-                    ContactData = profile.Contact != null ? new ContactData
+                    DateOfBirth = DateTime.Parse(profile.DateOfBirth).ToString("dd.MM.yyyy"),
+                    ContactData = profile?.Contact != null ? new ContactData
                     {
                         Street = profile.Contact.Street,
                         HouseNumber = profile.Contact.HouseNumber,
@@ -129,17 +127,41 @@ namespace BusinessLogic.Administration
         {
             try
             {
-                if(CurrentUser.ContactId == null)
+                if(CurrentUser.ContactId == null || CurrentUser.ContactId == -1)
                 {
-                    await UnitOfWork.LogRepository.AddAsync(new LogMessage
-                    {
-                        Trigger = nameof(UserService),
-                        Message = "Update contact data failed!",
-                        ExceptionJson = "",
-                        TimeStamp = DateTime.Now
-                    });
+                    var user = await UnitOfWork.UserRepository.GetByIdAsync(CurrentUser.Id);
 
-                    await UnitOfWork.SaveChanges();
+                    if (user == null)
+                    {
+                        await UnitOfWork.LogRepository.AddAsync(new LogMessage
+                        {
+                            Trigger = nameof(UserService),
+                            Message = "Update contact data failed!",
+                            ExceptionJson = "",
+                            TimeStamp = DateTime.Now
+                        });
+
+                        await UnitOfWork.SaveChanges();
+
+                        return false;
+                    }
+
+                    user.Contact = new Contact
+                    {
+                        Street = contactDataImport.Street,
+                        HouseNumber = contactDataImport.HouseNumber,
+                        PostalCode = contactDataImport.PostalCode,
+                        City = contactDataImport.City,
+                        Country = contactDataImport.Country,
+                    };
+
+                    var isUpdated = await UnitOfWork.UserRepository.Update(user);
+
+                    if (isUpdated) {
+                        await UnitOfWork.SaveChanges();
+
+                        return true;
+                    }
 
                     return false;
                 }
@@ -199,7 +221,7 @@ namespace BusinessLogic.Administration
 
         private async Task LoadContactData(int? contactId)
         {
-            if (contactId == null)
+            if (contactId == null || contactId == -1)
             {
                 return;
             }

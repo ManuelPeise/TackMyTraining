@@ -28,7 +28,6 @@ export const useStatefulApi = <T>(options: ApiRequestOptions, force?: boolean, i
         headers: { 'Content-Type': 'application/json' },
       }).then(async (res) => {
         if (res.status === 200) {
-          console.log('status', res.status);
           const responseData: T = await JSON.parse(JSON.stringify(res.data));
 
           setData(responseData);
@@ -45,12 +44,12 @@ export const useStatefulApi = <T>(options: ApiRequestOptions, force?: boolean, i
     }
   }, []);
 
-  const post = React.useCallback(async (options: ApiRequestOptions, data?: string): Promise<T | null> => {
+  const post = React.useCallback(async <TValue>(options: ApiRequestOptions, data?: string): Promise<TValue> => {
     if (!isPublic) {
       AxiosClient.defaults.headers.common['Authorization'] = `bearer ${jwtData.jwtToken}`;
     }
 
-    let response: T | null = null;
+    let response: TValue | null = null;
     setError(null);
     setIsLoading(true);
     try {
@@ -82,14 +81,15 @@ export const useStatefulApi = <T>(options: ApiRequestOptions, force?: boolean, i
   React.useEffect(() => {
     if (force) {
       const loadData = async () => {
-        await get(true);
+        await get(force);
       };
 
       loadData();
     }
     // eslint-disable-next-line
-  }, []);
+  }, [force]);
 
+  console.log(error);
   return {
     isLoading: isLoading,
     error: error,

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Security.Principal;
 
 
 namespace BusinessLogic.Administration
@@ -123,7 +124,7 @@ namespace BusinessLogic.Administration
 
         private List<Claim> LoadUserClaims(AppUser account)
         {
-            return new List<Claim>
+            var claims = new List<Claim>
             {
                 new Claim("UserId", account.Id.ToString()),
                 new Claim("Email",account.Email),
@@ -131,14 +132,37 @@ namespace BusinessLogic.Administration
                 new Claim("FirstName", account.FirstName ?? ""),
                 new Claim("LastName", account.LastName ?? ""),
                 new Claim("IsActive", account.IsActive.ToString() ?? "false"),
-                new Claim("CrendentialsId", account.CrendentialsId.ToString() ?? "-1"),
-                new Claim("ContactId", account.ContactId.ToString() ?? "-1"),
             };
-        }
 
-        private async Task TryLoadCredentials(int crendentialsId)
+            if(account.ContactId != null)
+            {
+                claims.Add(new Claim("ContactId", account.ContactId.ToString()));
+            }
+            else
+            {
+                claims.Add(new Claim("ContactId", "-1"));
+            }
+
+            if(account.CrendentialsId != null)
+            {
+                claims.Add(new Claim("CrendentialsId", account.CrendentialsId.ToString()));
+            }
+            else
+            {
+                claims.Add(new Claim("CrendentialsId", "-1"));
+            }
+
+            return claims;
+        }
+        
+        private async Task TryLoadCredentials(int? crendentialsId)
         {
-            await _unitOfWork.UserCredentialsRepository.GetByIdAsync(crendentialsId);
+            if(crendentialsId == null)
+            {
+                return;
+            }
+
+            await _unitOfWork.UserCredentialsRepository.GetByIdAsync((int)crendentialsId);
         }
 
         private async Task TryLoadContactData(int? contactId)

@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Shared.Interfaces;
+﻿using BusinessLogic.Shared;
+using BusinessLogic.Shared.Interfaces;
 using Data.Models.Entities;
 using Data.Models.Enums;
 using Newtonsoft.Json;
@@ -53,17 +54,30 @@ namespace BusinessLogic.Shared
 
         private AppUser LoadCurrentUserFromClaims()
         {
-            return new AppUser
+            var user = new AppUser
             {
                 Id = _claimsAccessor.GetClaimsValue<int>("UserId"),
                 FirstName = _claimsAccessor.GetClaimsValue<string>("FirstName"),
                 LastName = _claimsAccessor.GetClaimsValue<string>("LastName"),
                 Email = _claimsAccessor.GetClaimsValue<string>("Email"),
                 IsActive = bool.Parse(_claimsAccessor.GetClaimsValue<string>("IsActive")),
-                ContactId = int.Parse(_claimsAccessor.GetClaimsValue<string>("ContactId")),
-                CrendentialsId = int.Parse(_claimsAccessor.GetClaimsValue<string>("CrendentialsId"))
-
             };
+
+            var contactIdClaimValue = _claimsAccessor.GetClaimsValue<int?>("ContactId");
+
+            if(contactIdClaimValue != null)
+            {
+                user.ContactId = contactIdClaimValue;
+            }
+            var credentialIdClaimValue = _claimsAccessor.GetClaimsValue<int?>("CrendentialsId");
+
+            if (credentialIdClaimValue != null)
+            {
+                user.ContactId = credentialIdClaimValue;
+            }
+           
+            return user;
         }
     }
 }
+

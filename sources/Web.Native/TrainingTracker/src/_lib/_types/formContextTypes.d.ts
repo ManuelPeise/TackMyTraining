@@ -1,4 +1,6 @@
 import { PropsWithChildren } from 'react';
+import { FieldValues } from 'react-hook-form';
+import { StyleProp, ViewStyle } from 'react-native';
 
 export type FormContextProps<TModel> = PropsWithChildren & {
   defaultValues?:
@@ -9,11 +11,12 @@ export type FormContextProps<TModel> = PropsWithChildren & {
         formModel?: TModel;
       };
   buttonPosition: 'center' | 'flex-end';
-  onSubmit: () => Promise<boolean>;
+  onSubmit: (fieldsValues: FieldValues) => Promise<boolean>;
   padding?: number;
   marginTop?: number;
   cancelLabel?: string;
   actionLabel?: string;
+  additionalStyle?: StyleProp<ViewStyle>;
 };
 
 export type CustomFormContentProps = {

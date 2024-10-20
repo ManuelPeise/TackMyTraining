@@ -12,7 +12,7 @@ namespace Data.Models.Entities
         public string UserName => Email;
         public string DateOfBirth { get; set; }
         public bool IsActive { get; set; }
-        public int CrendentialsId { get; set; }
+        public int? CrendentialsId { get; set; }
         [ForeignKey(nameof(CrendentialsId))]
         public UserCredentials? Credentials { get; set; }
         public int? ContactId { get; set; }

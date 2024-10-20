@@ -22,5 +22,9 @@
   "labelStreet": "Street",
   "labelTrainingsTracker": "Trainings Tracker",
   "labelUserName": "User name",
-  "labelWelcomeText": "Come in now and get out fit later!"
+  "labelWelcomeText": "Come in now and get out fit later!",
+  "labelYourContactData": "Your contact data",
+  "labelYourProfileData": "Your profile data",
+  "loadingHamster": "The hamster is still turning the wheel...",
+  "loadingServer": "Server is still looking\n\n for the appropriate data..."
 }

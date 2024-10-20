@@ -42,3 +42,17 @@ export type Contact = {
   city: string;
   country: string;
 };
+
+export type ProfileImport = {
+  firstName: string;
+  lastName: string;
+  email: string;
+};
+
+export type ContactImport = {
+  street: string;
+  houseNumber: string;
+  postalCode: string;
+  city: string;
+  country: string;
+};
