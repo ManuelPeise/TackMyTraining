@@ -62,7 +62,7 @@ const DrawerContent: React.FC<IDrawerContentProps> = (props) => {
           return getResource('nav:labelAppSettings');
         case NavigationEnum.Profile:
           return getResource('nav:labelProfile');
-        case NavigationEnum.Profile:
+        case NavigationEnum.Sandbox:
           return 'Sandbox';
         default:
           return '';

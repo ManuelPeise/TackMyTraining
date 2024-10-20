@@ -1,6 +1,5 @@
 import React from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
-import { ProfileService } from '../Services/ProfileService';
 import { Contact, UserData } from 'src/_lib/_types/userTypes';
 import { useI18n } from 'src/_hooks/useI18n';
 import { useAppContext } from 'src/_hooks/useAppContext';
@@ -10,16 +9,18 @@ import { SaveCancelButtonProps } from 'src/_components/_buttons/SaveCancelButton
 import FormContainer from 'src/_components/_forms/FormContainer';
 import FormFieldFactory, { getFormTextFieldProps } from 'src/_components/_inputs/FormFieldFactory';
 import { FormFieldTypeEnum } from 'src/_lib/_enums/FieldTypeEnum';
+import { useStatefulApi } from 'src/_hooks/useStatefulApi';
+import { serviceUrls } from 'src/_lib/_api/ServiceUrls';
 
 const ProfileFormInitializationContainer: React.FC = () => {
-  const { isLoading, userData } = ProfileService();
+  const { data, isLoading } = useStatefulApi<UserData>({ serviceUrl: serviceUrls.profile.getProfile });
 
   if (isLoading === true) {
     console.log('Is loading...');
     return null;
   }
 
-  return <Form formId="profile-form" userData={userData} />;
+  return <Form formId="profile-form" userData={data} />;
 };
 
 interface IFormProps {

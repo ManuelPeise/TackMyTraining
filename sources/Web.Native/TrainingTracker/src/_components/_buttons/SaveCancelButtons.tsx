@@ -5,6 +5,7 @@ import { useI18n } from 'src/_hooks/useI18n';
 
 export type SaveCancelButtonProps = {
   position: 'flex-end' | 'center';
+  marginTop?: number;
   saveLabel?: string;
   cancelLabel?: string;
   canSave?: boolean;
@@ -14,7 +15,7 @@ export type SaveCancelButtonProps = {
 };
 
 const SaveCancelButtons: React.FC<SaveCancelButtonProps> = (props) => {
-  const { position, saveLabel, cancelLabel, canCancel, canSave, onSave, onCancel } = props;
+  const { position, saveLabel, cancelLabel, canCancel, canSave, marginTop, onSave, onCancel } = props;
   const { styles } = useAppContext();
   const { getResource } = useI18n();
 
@@ -27,6 +28,7 @@ const SaveCancelButtons: React.FC<SaveCancelButtonProps> = (props) => {
         gap: 10,
         justifyContent: position,
         padding: 10,
+        marginTop: marginTop,
         paddingRight: position === 'flex-end' ? 20 : 0,
       }}
     >
